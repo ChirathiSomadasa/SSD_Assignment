@@ -1,0 +1,202 @@
+.notification-bell-container {
+  position: relative;
+}
+
+.bell-icon {
+  cursor: pointer;
+  font-size: 24px; /* Adjust size as needed */
+  display: flex;
+  align-items: center;
+}
+
+
+
+.notification-dropdown {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  width: 300px; /* Adjust the width as needed */
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+  text-align: center; /* Center-align the content */
+}
+
+.notification-list-container {
+  /* border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;*/
+  margin: 50px 0 30px 0;
+  width: auto; 
+  height: auto;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: center;  /* Centers horizontally */
+  align-items: center; 
+  padding: 100px;
+  text-align: center;
+  font-size: 28px;
+  color: #ff1a1a;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+/* New Styles for Hover Effect */
+.notification-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  transition: background-color 0.3s, box-shadow 0.3s; 
+  align-items: center;
+  width: 1300px;
+  height: auto;
+  /* margin-bottom: 20px; */
+  /* margin-left: 50px; */
+  padding: 15px;
+  
+}
+
+.notification-card:hover {
+  background-color: #f5f5f5; /* Lighter background color on hover */
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
+}
+
+.notification-card-content h4 {
+  margin: 0 0 5px; /* Space below headings */
+  font-size: 16px;
+  color: #140364; /* Heading color */
+}
+
+.notification-card-content p {
+  margin: 0 0 10px; /* Space below paragraphs */
+  padding-left: 50px;
+  font-size: 14px;
+  color: #010101; /* Text color */
+}
+
+
+.underlined-text {
+  text-decoration: none;        /* Start without underline */
+  cursor: pointer;              /* Pointer cursor */
+  color: blue;                  /* Optional: Make it blue */
+  transition: color 0.3s ease, text-decoration-color 0.3s ease; /* Smooth transition */
+}
+
+.underlined-text:hover {
+  text-decoration: underline;   /* Add underline on hover */
+  text-decoration-color: blue;  /* Optional: underline color matches the text */
+  color: darkblue;              /* Change text color slightly on hover */
+}
+
+
+.delete-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  margin: 20px;
+  /* margin-top: 10px; */
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #ff0000;
+}
+/* Modal overlay and content styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  color: #003366; /* Dark blue text color for the popup box */
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.close-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.see-more-button {
+  background-color: #008CBA;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.notification-card {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+.warning-message {
+  background-color: #df3240; /* Light red background for the warning */
+  color: #fffeff; /* Dark red text for the warning */
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid #f5c6cb; /* Slightly darker border for the warning */
+  
+}
+

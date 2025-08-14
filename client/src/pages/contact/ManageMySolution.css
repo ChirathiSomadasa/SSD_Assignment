@@ -1,0 +1,67 @@
+/* For general table styling */
+.SContactTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .SContactTable th, .SContactTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .SContactTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .solution-item {
+    display: flex;  /* Align text and icons side by side */
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .icon-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .SeditIcon, .SdeleteIcon {
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .SeditIcon:hover {
+    color: #4CAF50; /* Edit icon hover color */
+  }
+  
+  .SdeleteIcon:hover {
+    color: #f44336; /* Delete icon hover color */
+  }
+  
+  .SStoreSearch {
+    margin-bottom: 20px;
+  }
+  
+  .SSearch {
+    padding: 10px;
+    width: 250px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
+
+  .thead{
+    font-weight: 400 !important;
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+   }

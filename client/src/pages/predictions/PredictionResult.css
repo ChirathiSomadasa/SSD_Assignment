@@ -1,0 +1,155 @@
+.result h1 {
+
+    text-align: center;
+    font-weight: 600;
+    font-family: poppins;
+}
+
+.result_data {
+
+    width: 55%;
+    display: block;
+    margin: auto;
+}
+
+table {
+    width: 100%;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    background-color: #e2fad9 !important;
+    margin-top: 40px;
+
+}
+
+
+td,
+th {
+    border: 1px solid #dddddd !important;
+    text-align: left !important;
+    padding: 8px;
+    color: #000 !important;
+    font-size: 16px !important;
+   
+}
+
+th {
+    background-color: rgb(203, 243, 213) !important;
+    color: #000 !important;
+    text-align: left !important;
+}
+
+.result_div {
+
+    padding: 10px;
+    background-color: #edf0ed !important;
+    font-family: poppins;
+}
+
+.edit_btn {
+
+    width: 200px;
+    height: 40px;
+    background-color: black !important;
+    color: white !important;
+    margin-left: 255px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.delete_btn {
+
+    width: 200px;
+    height: 40px;
+    background-color: rgb(154, 4, 4) !important;
+    color: white !important;
+    margin-left: 230px;
+    border: none;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+
+}
+
+.filter_bar {
+
+    height: 60px !important;
+    background-color: #103004 !important;
+    margin: 20px !important;
+    border-radius: 10px;
+}
+
+.search_bar {
+
+    width: 300px !important;
+    background-color: rgb(229, 229, 229) !important;
+    border-radius: 20px !important;
+    padding-left: 20px;
+    margin-left: 50px;
+    margin-top: 10px;
+}
+
+.search_container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #fff !important;
+    width: 300px;
+}
+
+.search_icon {
+    color: #666;
+    margin-right: 10px;
+}
+
+.search_bar {
+    border: none;
+    outline: none;
+    flex: 1;
+}
+
+.report_yields {
+
+    width: 200px;
+    height: 45px;
+    background-color: #e2fad9 !important;
+    color: black;
+    font-weight: bold;
+    margin-left: 400px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.report_yieldc {
+
+    width: 200px;
+    height: 45px;
+    background-color: #e2fad9 !important;
+    color: black;
+    font-weight: bold;
+    margin-left: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.search_btn{
+    width: 120px;
+    height: 40px;
+    background-color: #e2fad9 !important;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.clear_btn{
+    width: 120px;
+    height: 40px;
+    background-color: #e2fad9 !important;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+}

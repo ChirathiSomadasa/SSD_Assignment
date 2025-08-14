@@ -1,0 +1,190 @@
+.fertilizer-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    position: relative; 
+    overflow: hidden;
+}
+
+.fertilizer-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../../images/fertilizers/paddy1.jpg) no-repeat center center; 
+    background-size: cover;
+    filter: blur(10px); 
+    z-index: -1; 
+}
+
+
+.fertilizer-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.parallax1 {
+
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8)), url(../../images/fertilizers/paddy.jpg);
+    min-height: 400px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fertilizer_centered {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    font-size: 30px;
+    color: white;
+    font-family:'Times New Roman';
+
+}
+
+.fertilizer-list {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.fertilizer-item {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.fertilizer-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.fertilizer-item h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.fertilizer-item p {
+    font-size: 1rem;
+    color: #777;
+}
+
+.fertilizer-item:hover {
+    transform: translateY(-5px);
+}
+
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.action-buttons button {
+    background-color: #6C63FF; /* Purple color */
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.action-buttons button:hover {
+    background-color: #5846d6; /* Darker purple */
+}
+
+.fertilizer-item {
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+
+
+.fertilizer-item img {
+    max-width: 50%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.fertilizer-item h2 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.fertilizer-item p {
+    font-size: 1rem;
+}
+
+.fertilizer-slider-container {
+    text-align: center;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .fcards-container {
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+    position: relative;
+    gap: 20px; 
+}
+
+.fcard {
+    flex: 0 0 50%; 
+    transition: transform 0.6s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+  
+  .fcard img {
+    width: 200px;
+    height: auto; 
+    border-radius: 5px;
+    margin: 0 auto;
+}
+
+  
+  .fcard-content {
+    padding: 5px;
+  }
+  
+  .fcard h2 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+  }
+  
+  .fcard p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+ 
+  
+ 
+  

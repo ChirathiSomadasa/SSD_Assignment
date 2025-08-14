@@ -1,0 +1,107 @@
+.view-all {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    position: relative; 
+    overflow: hidden;
+  }
+  
+    .topic {
+      background-color: #fefefe9e;
+      color: black;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .search-buttonadmin {
+      padding: 10px;
+      background-color: #027413;
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bolder;
+      text-align: center;
+      width: 150px; 
+      margin-right: 600px;
+     
+  }
+  .search-inputadmin{
+    padding: 10px;
+    border: 2px solid black;;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bolder;
+    margin-top: 20px;
+    text-align: center;
+    width: 20%;
+    margin-left: 80px;
+  
+  }
+   .download-button {
+    padding: 10px;
+    background-color: #4843b7;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    text-align: center;
+    width: 20%;
+   margin-right: 80px;
+    
+  }
+  
+   .download-button:hover {
+      background-color: #16015c;
+  }
+
+  .search-buttonadmin:hover {
+    background-color: #01480e;
+}
+    
+    .detail-tableadmin {
+      width: 100%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background: #f9f9f9bd;
+     
+    }
+    
+    .detail-tableadimn th, .detail-tableadimn td {
+      border: 1px solid #656565;
+      padding: 8px;
+      text-align: center;
+      padding: 12px;
+      width: 10%;
+      
+    }
+    
+    .detail-tableadmin th {
+      background-color: #c0c3c0;
+      
+  
+    }
+    
+    .action-button1 {
+      padding: 10px 1px;
+      margin: 3px 3px;
+      border: none;
+      cursor: pointer;
+      color: white;
+      width: 100%;
+      font-size: 16px;
+    }
+    
+    
+    .reject {
+      background-color: red;
+     
+    }
+    
+    .approve {
+      background-color: green;
+    }

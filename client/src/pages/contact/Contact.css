@@ -1,0 +1,304 @@
+.Qparallax {
+    /* The image used */
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8)), url(../../images/Contact/Qhome.jpg);
+
+    /* Set a specific height */
+    min-height: 600px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+
+.Qcentered {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    font-size: 30px;
+    color: white;
+    font-family:'Times New Roman';
+
+}
+
+
+.QWelcomeContent {
+
+  height: auto;
+ }
+
+.Qwelcome_topic {
+
+  text-align: center;
+  justify-content: center;
+  font-size: 36px;
+  font-family: 'Great Vibes', 'cursive';
+  color: rgb(100, 100, 100);
+}
+
+.Qwelcome {
+
+  width: 1200px;
+  height: 450px;
+  margin: auto;
+
+}
+
+.Qwelcome_des {
+
+  width: 520px;
+  height: 400px;
+  float: left;
+  padding: 30px;
+  font-family: 'times new roman';
+  font-size: 18px;
+  color: rgb(102, 102, 102);
+  font-weight: 100;
+  background-color: rgb(240, 249, 230);
+
+}
+
+.Qwelcome_photo {
+
+  width: 500px;
+  height: 450px;
+  float: left;
+
+}
+
+.Qwelcome_photo img {
+
+  width: 120%;
+  height: 460px;
+  object-fit: cover;
+}
+
+  
+.Qadd-problem-button {
+    display: block !important;
+    width: fit-content !important;
+    background-color: #9fdfaf !important; /* Green background */
+    color: rgb(10, 4, 4) !important; /* White text */
+    font-size: 15px !important; /* Larger text size */
+    border-radius: 10px !important; /* Rounded corners */
+    margin-left: 100px !important;
+    margin-top: 10px !important;
+    font-weight: bold !important;
+    float: left !important;
+    padding: 8px !important;
+    outline: none !important;
+    border: none !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    cursor: pointer !important;
+}
+
+.Qmanagebtn{
+  display: block !important;
+    width: fit-content !important;
+    background-color: #9fdfaf !important; /* Green background */
+    color: rgb(15, 2, 2) !important; /* White text */
+    font-size: 15px !important; /* Larger text size */
+    border-radius: 10px !important; /* Rounded corners */
+    margin-left: 10px !important;
+    margin-top: 10px !important;
+    font-weight: bold !important;
+    float: left !important;
+    padding: 8px !important;
+    outline: none !important;
+    border: none !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    cursor: pointer !important;
+}
+
+.Qsolbtn{
+  display: block !important;
+    width: fit-content !important;
+    background-color: #9fdfaf !important; /* Green background */
+    color: rgb(15, 2, 2) !important; /* White text */
+    font-size: 15px !important; /* Larger text size */
+    border-radius: 10px !important; /* Rounded corners */
+    margin-left: 10px !important;
+    margin-top: 10px !important;
+    font-weight: bold !important;
+    float: left !important;
+    padding: 8px !important;
+    outline: none !important;
+    border: none !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    cursor: pointer !important;
+}
+
+.Qgeneratebtn{
+  display: block !important;
+    width: fit-content !important;
+    background-color: #9fdfaf !important; /* Green background */
+    color: rgb(15, 12, 12) !important; /* White text */
+    font-size: 15px !important; /* Larger text size */
+    border-radius: 10px !important; /* Rounded corners */
+    margin-left: 500px !important;
+    margin-top: 10px !important;
+     font-weight: bold !important;
+    float: left !important;
+    padding: 8px !important;
+    outline: none !important;
+    border: none !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    cursor: pointer !important;
+}
+  
+.QaddBtn{
+     width : 1200px !important;
+    height: 50px !important;
+    float:left !important;
+    background-color: #053106 !important;
+    margin-top: 10px !important;
+    margin-left: 60px !important;
+    border-radius: 10px !important;
+ }
+
+.QStoreSearch{
+     margin-top: 20px !important;
+    margin-left: 960px !important;
+    margin-right: 40px !important;
+}
+
+.QSearch{
+    padding: 10px !important;
+    border-radius: 10px !important;
+    outline: none !important;
+    border: none !important;
+    width: 250px !important;
+    margin-left: 10px !important;
+    background-color: #77777744 !important;
+}
+  
+.QContactStore {
+  
+  flex-direction: column !important; /* Stack cards vertically */
+  align-items: center !important;
+  gap: 20px !important;
+  width: 1200px !important;
+  margin: 40px auto !important;
+  height: auto !important;
+  font-family: Georgia, 'Times New Roman', Times, serif !important;
+  padding-top: 30px !important;
+  display: flex !important;
+}
+
+.QContactCard {
+  background-color: #a78686;
+  width: 600px; /* Make the card width occupy most of the row */
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.QContactCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(18, 214, 83, 0.37);
+  background-color: #23e2432d;
+}
+
+.QContactCard h3 {
+  color: #4CAF50;
+  margin-bottom: 10px;
+}
+
+.QContactCard p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.QCardActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+h7 {
+  color: #2C5F2D;
+  font-weight: bold;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  
+.QContactCard {
+  position: relative; /* Allow positioning of child elements */
+  border: 1px solid #ddd; /* Card border */
+  padding: 20px; /* Padding inside the card */
+  margin-bottom: 20px; /* Space between cards */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Card shadow */
+  background-color: #fff; /* White background */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.QlocationIcon{
+  position: absolute;
+   
+  padding-bottom: 10px;
+   font-size: 24px; /* Icon size */
+  color: #0f0f0f; /* Blue color for the edit icon */
+  cursor: pointer; /* Show pointer on hover */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+
+.QCardActions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between; /* Space between the edit and delete buttons */
+  align-items: center;
+}
+
+.QSolutionbtn{
+  display: block !important;
+    width: fit-content !important;
+    background-color: #0d1135 !important; /* Green background */
+    color: white !important; /* White text */
+    font-size: 15px !important; /* Larger text size */
+    border-radius: 10px !important; /* Rounded corners */
+    margin-left: 470px !important;
+     font-weight: bold !important;
+     padding: 8px !important;
+    outline: none !important;
+    border: none !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    cursor: pointer !important;
+}
+.QlocationLink {
+  text-decoration: none; /* Remove underline */
+}
+
+ul{
+  margin-left: 15px;
+}
+
+li{
+  list-style-type:    disc ;
+  margin-left: 15px;
+}
+  
+.underlined-text {
+  text-decoration: none;        /* Start without underline */
+  cursor: pointer;              /* Pointer cursor */
+  color: blue;                  /* Optional: Make it blue */
+  transition: color 0.3s ease, text-decoration-color 0.3s ease; /* Smooth transition */
+}
+
+.underlined-text:hover {
+  text-decoration: underline;   /* Add underline on hover */
+  text-decoration-color: blue;  /* Optional: underline color matches the text */
+  color: darkblue;              /* Change text color slightly on hover */
+}
+
+ 

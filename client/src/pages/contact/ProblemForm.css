@@ -1,0 +1,66 @@
+.Qaddproblem_photo {
+    background-image: url(../../images/Contact/3.jpg);
+    width: 100%;
+    min-height: 800px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;  /* Center horizontally */
+    align-items: center;      /* Center vertically */
+    padding: 20px;            /* Add some padding */
+}
+
+.PAtopic {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+    text-align: center !important;
+    font-weight: bold !important;
+}
+
+.PAproductForm {
+    max-width: 600px !important;
+    margin: 0 auto !important;
+    padding: 35px !important;
+    background-color: #dbd4d4d2 !important;
+    border-radius: 10px !important;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+    display: flex;
+    flex-direction: column;   /* Ensures form items are stacked vertically */
+    gap: 15px;                /* Space between form elements */
+}
+
+.PAform-group {
+    display: flex;
+    flex-direction: column;   /* Stack label and input vertically */
+    margin-bottom: 15px !important;
+}
+
+label {
+    font-weight: bold !important;
+    margin-bottom: 5px !important;
+    font-size: 15px !important;
+}
+
+.PAinarea {
+    width: 100% !important;
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 5px !important;
+    font-size: 16px !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+.PAbtn {
+    background-color: #0e1011 !important;
+    color: #fff !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    padding: 15px !important;
+    font-weight: bold !important;
+    width: 100% !important;
+}
+
+button[type="submit"] {
+    background-color: #090b0c !important;
+}

@@ -1,0 +1,68 @@
+.Aaddproblem_photo{
+    background-image: url(../../images/Contact/4.jpg);
+    width: 100%;
+    min-height: 800px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.PAtopic{
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-align: center;
+    font-weight: bold;
+ }
+ 
+.PAproductForm{
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 35px;
+    background-color: #dbd4d4d2;
+    border-radius: 10px;
+     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', seri;
+     flex-direction: column;
+  }
+
+.PAform-group {
+    margin-bottom: 10px;
+    flex-direction: column;
+}
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 2px;
+    font-size: 15px;
+}
+.PAinarea{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.PAbtn {
+     
+    background-color: #0e1011;
+    color: #fff; 
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 16px;
+ }
+button[type="submit"] {
+    background-color: #090b0c;
+
+}
+ 
+
+   
+  .PAForm{
+    float:left;
+    width: 580px;
+    height: 400px;
+    padding-left: 100px;    
+    }
