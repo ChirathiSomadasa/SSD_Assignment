@@ -1,127 +1,131 @@
-/*import React, { useEffect, useState } from 'react';
+// src/components/predictions/PredictionResult.js
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './PredictionResult.css';
-import { useAuthEmail, useAuthPassword } from '../../auth'
+import { useAuthToken, useIsAuthenticated } from '../../auth'; // Use JWT
 import jsPDF from 'jspdf';
-import Logo from '../../images/logo.png';  
 import 'jspdf-autotable';
-
+import Logo from '../../images/logo.png';
 
 function PredictionResult() {
-
-    const authEmail = useAuthEmail();
-    const authPassword = useAuthPassword();
+    const navigate = useNavigate();
+    const token = useAuthToken(); // Get JWT
+    const isAuthenticated = useIsAuthenticated();
 
     const [predictions, setPredictions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [searchQuery, setSearchQuery] = useState(''); 
-    const [search, setSearch] = useState(false); // Track if search button is clicked
-    const navigate = useNavigate();
-    
+    const [searchQuery, setSearchQuery] = useState('');
+    const [search, setSearch] = useState(false); // Track search state
 
+    // 🔒 Redirect if not authenticated
     useEffect(() => {
-        // Fetch all predictions from the backend
+        if (!isAuthenticated) {
+            navigate('/login', { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
+
+    // Fetch predictions from backend using JWT
+    useEffect(() => {
         const fetchPredictions = async () => {
             try {
-                const response = await axios.post('http://localhost:5001/prediction/api/getpredictions/',{auth_email:authEmail,auth_password:authPassword});
+                const response = await axios.get('http://localhost:5001/prediction/api/predictions', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-                for(var i = 0; i < response.data.data.length; i++){
-                    var item = response.data.data[i];
-                    
-                    let calculatedStatus = '';
-                    let calculatedRecommendation = '';
+                // ✅ Add status & recommendation (can be moved to backend later)
+                const predictionsWithStatus = response.data.data.map(item => {
+                    let status = '';
+                    let recommendation = '';
 
-                    if (item.estimatedYield > 3000 && item.yieldVariability < 10) {
-                        calculatedStatus = 'Good';
-                        calculatedRecommendation = 'Continue with the current practices.';
-                    } else if (item.estimatedYield >= 2000 && item.estimatedYield <= 3000 && item.yieldVariability >= 10) {
-                        calculatedStatus = 'Moderate';
-                        calculatedRecommendation = 'Consider improving irrigation and monitoring weather conditions.';
+                    const estimatedYield = parseInt(item.estimatedYield, 10);
+                    const yieldVariability = parseInt(item.yieldVariability, 10);
+
+                    if (estimatedYield > 3000 && yieldVariability < 10) {
+                        status = 'Good';
+                        recommendation = 'Continue with the current practices.';
+                    } else if (estimatedYield >= 2000 && estimatedYield <= 3000 && yieldVariability >= 10) {
+                        status = 'Moderate';
+                        recommendation = 'Consider improving irrigation and monitoring weather conditions.';
                     } else {
-                        calculatedStatus = 'Poor';
-                        calculatedRecommendation = 'Review agricultural practices, consider new irrigation methods, and prepare for weather variability.';
+                        status = 'Poor';
+                        recommendation = 'Review agricultural practices, consider new irrigation methods, and prepare for weather variability.';
                     }
 
-                    item.status = calculatedStatus;
-                    item.recommendation = calculatedRecommendation;
+                    return { ...item, status, recommendation };
+                });
 
-                }
-
-                console.log(response.data.data);
-                
-                setPredictions(response.data.data);
+                setPredictions(predictionsWithStatus);
                 setLoading(false);
             } catch (err) {
-                setError('Failed to load predictions.You must login to the system.');
+                console.error('Error fetching predictions:', err);
+                if (err.response?.status === 401) {
+                    setError('Session expired. Please log in again.');
+                    navigate('/login');
+                } else {
+                    setError('Failed to load predictions. Please try again later.');
+                }
                 setLoading(false);
             }
         };
 
-        fetchPredictions();
-    }, []);
+        if (token) fetchPredictions();
+    }, [token, navigate]);
 
     const handleEdit = (id) => {
-       
         navigate(`/EditResult/${id}`);
     };
 
     const handleDelete = async (id) => {
         const confirmation = window.confirm('Do you want to delete this prediction result?');
-        if (confirmation) {
-            try {
-                await axios.delete(`http://localhost:5001/prediction/api/predictions/${id}`);
-                setPredictions(predictions.filter(prediction => prediction._id !== id));
-            } catch (err) {
-                setError('Failed to delete prediction');
-            }
+        if (!confirmation) return;
+
+        try {
+            await axios.delete(`http://localhost:5001/prediction/api/predictions/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setPredictions(prev => prev.filter(p => p._id !== id));
+        } catch (err) {
+            console.error('Delete error:', err);
+            alert('Failed to delete prediction. Please try again.');
         }
     };
-    
 
+    // Generate Summary Report (Good/Moderate/Poor counts)
     const handleGenerateReport = () => {
-        let goodCount = 0;
-        let moderateCount = 0;
-        let poorCount = 0;
-    
-        predictions.forEach(prediction => {
-            if (prediction.status === 'Good') goodCount++;
-            if (prediction.status === 'Moderate') moderateCount++;
-            if (prediction.status === 'Poor') poorCount++;
-        });
-    
+        const goodCount = predictions.filter(p => p.status === 'Good').length;
+        const moderateCount = predictions.filter(p => p.status === 'Moderate').length;
+        const poorCount = predictions.filter(p => p.status === 'Poor').length;
+
         const doc = new jsPDF();
-    
-        // Set background color only for the logo section
+
+        // Header background
         doc.setFillColor(0, 0, 0);
-        doc.rect(0, 0, 210, 50, 'F');  // Black background for logo section
-    
-        // Load and add logo asynchronously
+        doc.rect(0, 0, 210, 50, 'F');
+
         const img = new Image();
         img.src = Logo;
+
         img.onload = () => {
-            const logoWidth = 50;
-            const logoHeight = 25;
-            doc.addImage(img, 'PNG', 80, 10, logoWidth, logoHeight);
-    
-            // Add Title and Subtitle
+            doc.addImage(img, 'PNG', 80, 10, 50, 25);
+
             const pageWidth = doc.internal.pageSize.getWidth();
             doc.setFontSize(18);
+            doc.setTextColor(255, 255, 255);
             const title = 'Prediction Status Report';
-            const textWidth = doc.getTextWidth(title);
-            const textX = (pageWidth - textWidth) / 2;
-            doc.setTextColor(255, 255, 255); // White text color for title
-            doc.text(title, textX, 45);
-    
+            const titleX = (pageWidth - doc.getTextWidth(title)) / 2;
+            doc.text(title, titleX, 45);
+
             doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
             const subtitle = 'Summary of the number of status relating to poor, moderate, and good';
-            const subtitleWidth = doc.getTextWidth(subtitle);
-            const subtitleX = (pageWidth - subtitleWidth) / 2;
-            doc.setTextColor(0, 0, 0); // Black text color for subtitle
+            const subtitleX = (pageWidth - doc.getTextWidth(subtitle)) / 2;
             doc.text(subtitle, subtitleX, 60);
-    
-            // Add table with black header background and white text color for header
+
             doc.autoTable({
                 head: [['Status', 'Count']],
                 body: [
@@ -130,196 +134,142 @@ function PredictionResult() {
                     ['Poor', poorCount],
                 ],
                 startY: 70,
-                styles: {
-                    textColor: [0, 0, 0], // Default black text for table body
-                },
-                headStyles: {
-                    fillColor: [0, 0, 0],  // Black background for header
-                    textColor: [255, 255, 255],  // White text for header
-                },
+                headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] },
+                styles: { textColor: [0, 0, 0] }
             });
-    
-            // Save the PDF after logo and table are rendered
+
             doc.save('Prediction_Status_Report.pdf');
         };
-    
-        img.onerror = () => {
-            console.error('Failed to load the logo image.');
-        };
-    };
-    
 
+        img.onerror = () => alert('Failed to load logo.');
+    };
+
+    // Generate Detailed Report for current filtered/search results
     const handleCurrentGenerateReport = () => {
-        // Use filteredPredictions to generate report based on search or full data
-        const dataToGenerate = filteredPredictions.length > 0 ? filteredPredictions : predictions;
-        
+        const dataToGenerate = search ? filteredPredictions : predictions;
+
         const doc = new jsPDF();
-    
-        // Set the black background for the header section
         doc.setFillColor(0, 0, 0);
-        doc.rect(0, 0, 210, 50, 'F'); 
-    
-        // Load and add the logo
+        doc.rect(0, 0, 210, 50, 'F');
+
         const img = new Image();
         img.src = Logo;
-    
+
         img.onload = () => {
-            const logoWidth = 50;
-            const logoHeight = 25;
-            doc.addImage(img, 'PNG', 80, 10, logoWidth, logoHeight);
-    
-            // Title and Subtitle
+            doc.addImage(img, 'PNG', 80, 10, 50, 25);
+
             const pageWidth = doc.internal.pageSize.getWidth();
             doc.setFontSize(18);
+            doc.setTextColor(255, 255, 255);
             const title = 'Yield Prediction Summary Report';
-            const textWidth = doc.getTextWidth(title);
-            const textX = (pageWidth - textWidth) / 2;
-            doc.setTextColor(255, 255, 255); // White text color for title
-            doc.text(title, textX, 45);
-    
+            const titleX = (pageWidth - doc.getTextWidth(title)) / 2;
+            doc.text(title, titleX, 45);
+
             doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
             const subtitle = 'Overview of yield predictions based on current data.';
-            const subtitleWidth = doc.getTextWidth(subtitle);
-            const subtitleX = (pageWidth - subtitleWidth) / 2;
-            doc.setTextColor(0, 0, 0); // Black text color for subtitle
+            const subtitleX = (pageWidth - doc.getTextWidth(subtitle)) / 2;
             doc.text(subtitle, subtitleX, 60);
-    
-            // Add a table for yield prediction details
-            const tableBody = dataToGenerate.map(prediction => [
-                prediction.variety,
-                prediction.estimatedYield,
-                prediction.yieldVariability,
-                prediction.geographicLocation,
-                prediction.status,
-                prediction.recommendation
+
+            const tableBody = dataToGenerate.map(p => [
+                p.variety,
+                p.estimatedYield,
+                p.yieldVariability,
+                p.geographicLocation,
+                p.status,
+                p.recommendation
             ]);
-    
-            // Table with headers
+
             doc.autoTable({
-                head: [['Crop Variety', 'Estimated Yield (kg/ha)', 'Yield Variability (kg/ha)', 'Geographic Location', 'Status', 'Recommendation']],
+                head: [['Crop Variety', 'Est. Yield', 'Yield Variability', 'Location', 'Status', 'Recommendation']],
                 body: tableBody,
                 startY: 70,
-                styles: {
-                    textColor: [0, 0, 0], // Default black text for table body
-                },
-                headStyles: {
-                    fillColor: [0, 0, 0],  // Black background for header
-                    textColor: [255, 255, 255],  // White text for header
-                },
+                headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] },
+                styles: { fontSize: 10, textColor: [0, 0, 0] }
             });
-    
-            // Save the PDF after generating
+
             doc.save('Yield_Prediction_Report.pdf');
         };
-    
-        img.onerror = () => {
-            console.error('Failed to load the logo image.');
-        };
+
+        img.onerror = () => alert('Failed to load logo.');
     };
 
-    const handleSearch = () => {
-        // Set the search state to true when the search button is clicked
-        setSearch(true);
-    };
-
+    const handleSearch = () => setSearch(true);
     const handleClearSearch = () => {
-        setSearchQuery(''); // Clear search input and show all predictions
-        setSearch(false); // Reset the search state
+        setSearchQuery('');
+        setSearch(false);
     };
 
-    // Filter predictions based on search query, but only if search button was clicked
+    // Filter predictions only when search is active
     const filteredPredictions = search
-        ? predictions.filter(prediction => {
+        ? predictions.filter(p => {
             const query = searchQuery.toLowerCase();
-            const estimatedYieldStr = prediction.estimatedYield.toString();
-            const yieldVariabilityStr = prediction.yieldVariability.toString();
             return (
-                prediction.variety.toLowerCase().includes(query) ||
-                prediction.status.toLowerCase().includes(query) ||
-                prediction.geographicLocation.toLowerCase().includes(query) ||
-                estimatedYieldStr.includes(query) || 
-                yieldVariabilityStr.includes(query)
+                p.variety.toLowerCase().includes(query) ||
+                p.status.toLowerCase().includes(query) ||
+                p.geographicLocation.toLowerCase().includes(query) ||
+                p.estimatedYield.toString().includes(query) ||
+                p.yieldVariability.toString().includes(query)
             );
         })
         : predictions;
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="loading">Loading predictions...</div>;
     }
 
     if (error) {
-        return <div className='pre_log'>{error}</div>;
+        return <div className="pre_log">{error}</div>;
     }
 
     return (
-         <div className='result'>
+        <div className="result">
             <h1>Prediction Results</h1>
-            <div className='filter_bar'>
-    <input 
-        className='search_bar' 
-        placeholder="Search" 
-        type="text"  
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)} // This will filter predictions as user types
-    />
-   <button className='search_btn' onClick={handleSearch}>Search</button> 
-    <button className='clear_btn' onClick={handleClearSearch}>Clear Search</button>
-    <button className='report_yields' onClick={handleGenerateReport}>Generate Status Report</button>
-    <button className='report_yieldc' onClick={handleCurrentGenerateReport}>Generate Current Report</button>
-</div>
 
-            <div className='result_data'>
+            <div className="filter_bar">
+                <input
+                    className="search_bar"
+                    placeholder="Search by variety, location, status, yield..."
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button className="search_btn" onClick={handleSearch}>Search</button>
+                <button className="clear_btn" onClick={handleClearSearch}>Clear</button>
+                <button className="report_yields" onClick={handleGenerateReport}>Status Report</button>
+                <button className="report_yieldc" onClick={handleCurrentGenerateReport}>Current Report</button>
+            </div>
+
+            <div className="result_data">
                 {filteredPredictions.length === 0 ? (
-                    <p>No prediction results available.</p>
+                    <p>No prediction results match your search.</p>
                 ) : (
-                    filteredPredictions.map(prediction => (  // Use filteredPredictions here
-                        <div key={prediction._id} className='prediction_card'>
+                    filteredPredictions.map(prediction => (
+                        <div key={prediction._id} className="prediction_card">
                             <table>
                                 <tbody>
-                                    <tr>
-                                        <th>Variety</th>
-                                        <td>{prediction.variety}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Estimated Yield (kg/ha)</th>
-                                        <td>{prediction.estimatedYield}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Yield Variability (kg/ha)</th>
-                                        <td>{prediction.yieldVariability}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Geographic Location</th>
-                                        <td>{prediction.geographicLocation}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Irrigation Practices</th>
-                                        <td>{prediction.irrigationPractices}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Weather Conditions</th>
-                                        <td>{prediction.weatherConditions}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Status</th>
-                                        <td>{prediction.status}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Recommendation</th>
-                                        <td>{prediction.recommendation}</td>
-                                    </tr>
+                                    <tr><th>Variety</th><td>{prediction.variety}</td></tr>
+                                    <tr><th>Estimated Yield (kg/ha)</th><td>{prediction.estimatedYield}</td></tr>
+                                    <tr><th>Yield Variability (kg/ha)</th><td>{prediction.yieldVariability}</td></tr>
+                                    <tr><th>Geographic Location</th><td>{prediction.geographicLocation}</td></tr>
+                                    <tr><th>Irrigation Practices</th><td>{prediction.irrigationPractices}</td></tr>
+                                    <tr><th>Weather Conditions</th><td>{prediction.weatherConditions}</td></tr>
+                                    <tr><th>Status</th><td>{prediction.status}</td></tr>
+                                    <tr><th>Recommendation</th><td>{prediction.recommendation}</td></tr>
                                 </tbody>
                             </table>
-                            
-                            <div className='result_div'>Do you want to Edit Yield Prediction Results?<button className='edit_btn' onClick={() => handleEdit(prediction._id)}>Edit</button></div>
-                            <div className='result_div'>Do you want to Delete Yield Prediction Results?  <button className='delete_btn' onClick={() => handleDelete(prediction._id)}>Delete</button></div>
+                            <div className="result_div">Do you want to Edit Yield Prediction Results?
+                                <button className="edit_btn" onClick={() => handleEdit(prediction._id)}>Edit</button>
+                            </div>
+                            <div className="result_div">Do you want to Delete Yield Prediction Results?  
+                                <button className="delete_btn" onClick={() => handleDelete(prediction._id)}>Delete</button>
+                            </div>
                         </div>
                     ))
                 )}
             </div>
-
         </div>
     );
 }
 
-export default PredictionResult;*/
+export default PredictionResult;

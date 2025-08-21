@@ -39,43 +39,53 @@ function EditResult() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch all predictions from the backend
-        const fetchPredictions = async () => {
+        const fetchPrediction = async () => {
             try {
                 const response = await axios.get('http://localhost:5001/prediction/api/predictions/' + id);
 
-                for (var i = 0; i < response.data.data.length; i++) {
-                    var item = response.data.data[i];
+                const item = response.data.data; // single object
 
-                    let calculatedStatus = '';
-                    let calculatedRecommendation = '';
+                // Calculate status & recommendation
+                let calculatedStatus = '';
+                let calculatedRecommendation = '';
 
-                    if (item.estimatedYield > 3000 && item.yieldVariability < 10) {
-                        calculatedStatus = 'Good';
-                        calculatedRecommendation = 'Continue with the current practices.';
-                    } else if (item.estimatedYield >= 2000 && item.estimatedYield <= 3000 && item.yieldVariability >= 10) {
-                        calculatedStatus = 'Moderate';
-                        calculatedRecommendation = 'Consider improving irrigation and monitoring weather conditions.';
-                    } else {
-                        calculatedStatus = 'Poor';
-                        calculatedRecommendation = 'Review agricultural practices, consider new irrigation methods, and prepare for weather variability.';
-                    }
+                const est = parseInt(item.estimatedYield, 10);
+                const vari = parseInt(item.yieldVariability, 10);
 
-                    item.status = calculatedStatus;
-                    item.recommendation = calculatedRecommendation;
-
+                if (est > 3000 && vari < 10) {
+                    calculatedStatus = 'Good';
+                    calculatedRecommendation = 'Continue with the current practices.';
+                } else if (est >= 2000 && est <= 3000 && vari >= 10) {
+                    calculatedStatus = 'Moderate';
+                    calculatedRecommendation = 'Consider improving irrigation and monitoring weather conditions.';
+                } else {
+                    calculatedStatus = 'Poor';
+                    calculatedRecommendation = 'Review agricultural practices, consider new irrigation methods, and prepare for weather variability.';
                 }
 
-                setYieldData(response.data.data);
+                setYieldData({
+                    variety: item.variety || '',
+                    estimatedYield: item.estimatedYield || '',
+                    yieldVariability: item.yieldVariability || '',
+                    geographicLocation: item.geographicLocation || '',
+                    irrigationPractices: item.irrigationPractices || '',
+                    weatherConditions: item.weatherConditions || '',
+                });
+
+                setResultData({
+                    ...item,
+                    status: calculatedStatus,
+                    recommendation: calculatedRecommendation
+                });
 
             } catch (err) {
-                //setError('Failed to load predictions');
-                //setLoading(false);
+                console.error("Failed to load prediction:", err);
             }
         };
 
-        fetchPredictions();
-    }, []);
+        fetchPrediction();
+    }, [id]);
+
 
     const handleYieldChange = (e) => {
         const { name, value } = e.target;
@@ -144,11 +154,12 @@ function EditResult() {
         };
 
         try {
-            await axios.post('http://localhost:5001/prediction/api/predictions/' + id, yieldData, {
+            await axios.put('http://localhost:5001/prediction/api/predictions/' + id, yieldData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
+
             setResultData(resultData);
             console.log('Result Data:', resultData);
 

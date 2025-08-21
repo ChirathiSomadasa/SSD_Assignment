@@ -1,43 +1,40 @@
+// src/components/predictions/Predictions.js
 import React, { useState, useEffect } from 'react';
 import './Predictions.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-//import { useAuthEmail, useAuthPassword } from '../../auth';
+import { useAuthToken, useIsAuthenticated } from '../../auth'; // Import auth hooks
 import YieldImage from '../../images/yield/yield2.jpg';
 
 function Predictions() {
-
-    //const authEmail = useAuthEmail();
-    //const authPassword = useAuthPassword();
     const navigate = useNavigate();
+    const token = useAuthToken(); // Get JWT from localStorage
+    const isAuthenticated = useIsAuthenticated(); // Check if logged in
 
     const validRiceVarieties = [
-        'basmathi', 'kurulu thuda', 'heenati', 'haramas', 'rathhal', 
-        'maavee', 'pachchaperumal', 'red rice', 'black rice', 
-        'sticky Rice', 'samba', 'keeri samba', 'nadu', 'kakulu'
+        'basmathi', 'kurulu thuda', 'heenati', 'haramas', 'rathhal',
+        'maavee', 'pachchaperumal', 'red rice', 'black rice',
+        'sticky rice', 'samba', 'keeri samba', 'nadu', 'kakulu'
     ];
 
     const [yieldData, setYieldData] = useState({
-        //auth_email: authEmail,
-        //auth_password: authPassword,
         variety: '',
         estimatedYield: '',
         yieldVariability: '',
         geographicLocation: '',
-        historicalData: '',
         irrigationPractices: '',
         weatherConditions: '',
     });
 
     const [errors, setErrors] = useState({});
-    const [resultData, setResultData] = useState(null); // State for status and recommendation
+    const [resultData, setResultData] = useState(null);
 
     // Redirect to login if not authenticated
-    /*useEffect(() => {
-        if (!authEmail || !authPassword) {
-            navigate('/login');  // Redirect to login if auth credentials are missing
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate('/login', { replace: true });
         }
-    }, [authEmail, authPassword, navigate]);*/
+    }, [isAuthenticated, navigate]);
 
     const handleYieldChange = (e) => {
         const { name, value } = e.target;
@@ -64,18 +61,25 @@ function Predictions() {
     const handleYieldSubmit = async (e) => {
         e.preventDefault();
 
+        // Client-side validation
         const formErrors = {};
         if (!validRiceVarieties.includes(yieldData.variety.toLowerCase())) {
             formErrors.variety = 'Please enter a valid rice variety';
         }
-        if (!yieldData.geographicLocation.match(/^[a-zA-Z\s]*$/)) {
+        if (!/^[a-zA-Z\s]*$/.test(yieldData.geographicLocation)) {
             formErrors.geographicLocation = 'Please enter only letters';
         }
-        if (!yieldData.estimatedYield.match(/^\d*$/)) {
+        if (!/^\d*$/.test(yieldData.estimatedYield)) {
             formErrors.estimatedYield = 'Please enter a valid integer number';
         }
-        if (!yieldData.yieldVariability.match(/^\d*$/)) {
+        if (!/^\d*$/.test(yieldData.yieldVariability)) {
             formErrors.yieldVariability = 'Please enter a valid integer number';
+        }
+        if (!yieldData.irrigationPractices) {
+            formErrors.irrigationPractices = 'This field is required';
+        }
+        if (!yieldData.weatherConditions) {
+            formErrors.weatherConditions = 'This field is required';
         }
 
         if (Object.keys(formErrors).length > 0) {
@@ -83,13 +87,17 @@ function Predictions() {
             return;
         }
 
+        // Calculate status and recommendation
+        const estimatedYieldNum = parseInt(yieldData.estimatedYield, 10);
+        const yieldVariabilityNum = parseInt(yieldData.yieldVariability, 10);
+
         let calculatedStatus = '';
         let calculatedRecommendation = '';
 
-        if (yieldData.estimatedYield > 3000 && yieldData.yieldVariability < 10) {
+        if (estimatedYieldNum > 3000 && yieldVariabilityNum < 10) {
             calculatedStatus = 'Good';
             calculatedRecommendation = 'Continue with the current practices.';
-        } else if (yieldData.estimatedYield >= 2000 && yieldData.estimatedYield <= 3000 && yieldData.yieldVariability >= 10) {
+        } else if (estimatedYieldNum >= 2000 && estimatedYieldNum <= 3000 && yieldVariabilityNum >= 10) {
             calculatedStatus = 'Moderate';
             calculatedRecommendation = 'Consider improving irrigation and monitoring weather conditions.';
         } else {
@@ -97,23 +105,32 @@ function Predictions() {
             calculatedRecommendation = 'Review agricultural practices, consider new irrigation methods, and prepare for weather variability.';
         }
 
-        const resultData = {
+        const finalResultData = {
             ...yieldData,
             status: calculatedStatus,
             recommendation: calculatedRecommendation
         };
 
         try {
+            // Send data with JWT in Authorization header
             await axios.post('http://localhost:5001/prediction/api/predictions', yieldData, {
                 headers: {
                     'Content-Type': 'application/json',
-                },
+                    'Authorization': `Bearer ${token}`  // Send JWT token
+                }
             });
-            setResultData(resultData);
+
+            setResultData(finalResultData); // Show result UI
 
         } catch (error) {
-            console.error('Error during form submission:', error);
-            alert('Failed to submit prediction');
+            console.error('Error submitting prediction:', error);
+
+            if (error.response?.status === 401) {
+                alert('Session expired. Please log in again.');
+                navigate('/login');
+            } else {
+                alert('Failed to submit prediction. Please try again.');
+            }
         }
     };
 
@@ -135,26 +152,24 @@ function Predictions() {
 
             <div className='yiled'>
                 <div className='yiled_des'>
-                <p>Step into the future of agriculture with our cutting-edge
-                            Yield Prediction Management system, designed to revolutionize how you plan
-                            and manage your farming operations. With a simple input of your field data,
-                            you can compare current conditions with historical trends to receive detailed
-                            and personalized crop recommendations tailored to maximize your yields. Whether
-                            you're managing small farms or large-scale fields, our system adapts to your specific needs.<br></br><br></br>
+                    <p>Step into the future of agriculture with our cutting-edge
+                        Yield Prediction Management system, designed to revolutionize how you plan
+                        and manage your farming operations. With a simple input of your field data,
+                        you can compare current conditions with historical trends to receive detailed
+                        and personalized crop recommendations tailored to maximize your yields. Whether
+                        you're managing small farms or large-scale fields, our system adapts to your specific needs.<br /><br />
 
-                            Our system analyzes key factors such as irrigation practices,
-                            climate conditions,Geographic Location, estimated Yield and yield variability to guide you on the best times for
-                            Generate insightful reports to track farm success rates and make
-                            informed decisions that lead to higher yields and sustainable farming. <br></br><br></br>
+                        Our system analyzes key factors such as irrigation practices,
+                        climate conditions, Geographic Location, estimated Yield and yield variability to guide you on the best times for
+                        Generate insightful reports to track farm success rates and make
+                        informed decisions that lead to higher yields and sustainable farming. <br /><br />
 
-                            Furthermore, you can generate comprehensive reports that track the success of your fields,
-                            helping you monitor growth patterns, identify areas of improvement, and plan for future planting cycles.
-                            By utilizing these insightful reports, you can pinpoint how many farms have successfully grown
-                            crops under similar conditions, equipping you with the knowledge to improve performance across the board.
-                            Make informed decisions today that will lead to long-term success, sustainability, and higher yields.
-
-                        </p>
-
+                        Furthermore, you can generate comprehensive reports that track the success of your fields,
+                        helping you monitor growth patterns, identify areas of improvement, and plan for future planting cycles.
+                        By utilizing these insightful reports, you can pinpoint how many farms have successfully grown
+                        crops under similar conditions, equipping you with the knowledge to improve performance across the board.
+                        Make informed decisions today that will lead to long-term success, sustainability, and higher yields.
+                    </p>
                 </div>
                 <div className='yield_photo'><img src={YieldImage} alt="yield" /></div>
             </div>
@@ -165,7 +180,7 @@ function Predictions() {
                         <form onSubmit={handleYieldSubmit} className='formp'>
                             <h2 className='yield_topicp'>Yield Prediction</h2>
 
-                            <label className='yiled_labelp'>Variety </label><br />
+                            <label className='yiled_labelp'>Variety</label><br />
                             <input
                                 className='input_yiledp'
                                 type='text'
@@ -178,7 +193,7 @@ function Predictions() {
                             {errors.variety && <div className='error_messagep'>{errors.variety}</div>}
                             <br />
 
-                            <label className='yiled_labelp'>Estimated Yield (kg/ha) </label><br />
+                            <label className='yiled_labelp'>Estimated Yield (kg/ha)</label><br />
                             <input
                                 className='input_yiledp'
                                 type='text'
@@ -191,7 +206,7 @@ function Predictions() {
                             {errors.estimatedYield && <div className='error_messagep'>{errors.estimatedYield}</div>}
                             <br />
 
-                            <label className='yiled_labelp'>Yield Variability (kg/ha)  </label><br />
+                            <label className='yiled_labelp'>Yield Variability (kg/ha)</label><br />
                             <input
                                 className='input_yiledp'
                                 type='text'
@@ -204,7 +219,7 @@ function Predictions() {
                             {errors.yieldVariability && <div className='error_messagep'>{errors.yieldVariability}</div>}
                             <br />
 
-                            <label className='yiled_labelp'>Geographic Location </label><br />
+                            <label className='yiled_labelp'>Geographic Location</label><br />
                             <input
                                 className='input_yiledp'
                                 type='text'
@@ -234,8 +249,8 @@ function Predictions() {
                                 <option value='Centre Pivot irrigation'>Centre Pivot Irrigation</option>
                                 <option value='Sub irrigation'>Sub Irrigation</option>
                                 <option value='Manual irrigation'>Manual Irrigation</option>
-
                             </select>
+                            {errors.irrigationPractices && <div className='error_messagep'>{errors.irrigationPractices}</div>}
                             <br />
 
                             <label className='yiled_labelp'>Weather Conditions</label><br />
@@ -251,8 +266,8 @@ function Predictions() {
                                 <option value='Dry season'>Dry Season</option>
                                 <option value='Mild temperatures'>Mild Temperatures</option>
                                 <option value='Strong winds forecasted'>Strong Winds Forecasted</option>
-
                             </select>
+                            {errors.weatherConditions && <div className='error_messagep'>{errors.weatherConditions}</div>}
                             <br />
 
                             <button className='yiled_buttonp' type='submit'>SUBMIT</button>
