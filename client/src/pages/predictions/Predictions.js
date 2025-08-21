@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './Predictions.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuthEmail, useAuthPassword } from '../../auth';
+//import { useAuthEmail, useAuthPassword } from '../../auth';
 import YieldImage from '../../images/yield/yield2.jpg';
 
 function Predictions() {
 
-    const authEmail = useAuthEmail();
-    const authPassword = useAuthPassword();
+    //const authEmail = useAuthEmail();
+    //const authPassword = useAuthPassword();
     const navigate = useNavigate();
 
     const validRiceVarieties = [
@@ -18,8 +18,8 @@ function Predictions() {
     ];
 
     const [yieldData, setYieldData] = useState({
-        auth_email: authEmail,
-        auth_password: authPassword,
+        //auth_email: authEmail,
+        //auth_password: authPassword,
         variety: '',
         estimatedYield: '',
         yieldVariability: '',
@@ -33,11 +33,11 @@ function Predictions() {
     const [resultData, setResultData] = useState(null); // State for status and recommendation
 
     // Redirect to login if not authenticated
-    useEffect(() => {
+    /*useEffect(() => {
         if (!authEmail || !authPassword) {
             navigate('/login');  // Redirect to login if auth credentials are missing
         }
-    }, [authEmail, authPassword, navigate]);
+    }, [authEmail, authPassword, navigate]);*/
 
     const handleYieldChange = (e) => {
         const { name, value } = e.target;

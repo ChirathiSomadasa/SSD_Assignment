@@ -1,29 +1,20 @@
+// src/auth.js
 import { useCookies } from 'react-cookie';
 
-function useAuthEmail(){
-
-    const[cookies,setCookies] = useCookies(["auth_email"]);
-    var authToken = cookies.auth_email;
-    
-    if(authToken == undefined){
-        return null;
-    }else{
-        return authToken;
-    }
-    
+function useAuthEmail() {
+    const [cookies] = useCookies(['auth_email']);
+    return cookies.auth_email || null;
 }
 
-function useAuthPassword(){
-
-    const[cookies,setCookies] = useCookies(["auth_password"]);
-    var authToken = cookies.auth_password;
-    
-    if(authToken == undefined){
-        return null;
-    }else{
-        return authToken;
-    }
-    
+// Get JWT Token
+function useAuthToken() {
+    return localStorage.getItem('token');
 }
 
-export { useAuthEmail, useAuthPassword };
+// Check if user is logged in
+function useIsAuthenticated() {
+    return !!localStorage.getItem('token');
+}
+
+export { useAuthEmail, useAuthToken, useIsAuthenticated };
+

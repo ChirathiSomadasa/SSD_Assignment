@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './PredictionResult.css';
@@ -262,7 +262,7 @@ function PredictionResult() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)} // This will filter predictions as user types
     />
-   <button className='search_btn' onClick={handleSearch}>Search</button> {/* Search button */}
+   <button className='search_btn' onClick={handleSearch}>Search</button> 
     <button className='clear_btn' onClick={handleClearSearch}>Clear Search</button>
     <button className='report_yields' onClick={handleGenerateReport}>Generate Status Report</button>
     <button className='report_yieldc' onClick={handleCurrentGenerateReport}>Generate Current Report</button>
@@ -322,4 +322,4 @@ function PredictionResult() {
     );
 }
 
-export default PredictionResult;
+export default PredictionResult;*/

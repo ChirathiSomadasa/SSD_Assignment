@@ -1,5 +1,5 @@
+// src/components/Login.js
 import { useState } from 'react';
-import React from 'react';
 import { Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import './Login.css';
@@ -8,87 +8,78 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
 function Login() {
+    const [cookies, setCookies] = useCookies(['auth_email']);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  const [cookies, setCookies, removeCookies] = useCookies(['auth_email', 'auth_password']);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+    const onFinishLogin = (values) => {
+        setLoading(true);
 
-  const onFinishLogin = (values) => {
-    setLoading(true);
+        axios.post('http://localhost:5001/login', values)
+            .then((response) => {
+                setLoading(false);
+                const data = response.data;
 
-    // Send form data to backend API
-    axios
-      .post('http://localhost:5001/user/login', values)
-      .then((response) => {
-        setLoading(false);
-        var data = response.data;
-        var status = data.status;
-        // Check the backend response
-        if (status === 'success') {
-          // Save token or user data in localStorage or context
-          localStorage.setItem('email', response.data.email); // Example: saving user email
-          // You can add more user information in localStorage if necessary
-          setCookies("auth_email", response.data.email);
-          setCookies("auth_password", response.data.password);
-          navigate('/'); // Redirect to the dashboard or homepage after successful login
-        } else if (status === 'invalid_user') {
-          const message = data.message;
-          alert(message);
-        } else {
-          alert(JSON.stringify(data));
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        alert("Error - " + error);
-      });
-  };
+                if (data.status === 'success') {
+                    // Store JWT and email
+                    localStorage.setItem('token', data.token);
+                    setCookies('auth_email', data.email, { path: '/' });
+                    navigate('/');
+                } else {
+                    alert(data.message || 'Login failed');
+                }
+            })
+            .catch((error) => {
+                setLoading(false);
+                alert("Error: " + (error.response?.data?.message || error.message));
+            });
+    };
 
-  return (
-    <div className='bg-image-login'>
-      <div className='authentication-login'>
-        <div className='authentication-form-login card p-2'>
-          <h1 className='card-title'>LOGIN</h1>
+    // Redirect to backend Google OAuth
+    const handleGoogleLogin = () => {
+        window.location.href = 'http://localhost:5001/auth/google';
+    };
 
-          <Form className='login-form-credentials' layout='vertical' onFinish={onFinishLogin}>
-            <Form.Item
-              label='Email'
-              name='email'
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your Email!',
-                },
-              ]}
-            >
-              <Input className='login_input' placeholder='Email' />
-            </Form.Item>
+    return (
+        <div className='bg-image-login'>
+            <div className='authentication-login'>
+                <div className='authentication-form-login card p-2'>
+                    <h1 className='card-title'>LOGIN</h1>
 
-            <Form.Item
-              label='Password'
-              name='password'
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your Password!',
-                },
-              ]}
-            >
-              <Input.Password className='login_input' placeholder='Password' type='password' />
-            </Form.Item>
+                    <Form className='login-form-credentials' layout='vertical' onFinish={onFinishLogin}>
+                        <Form.Item label='Email' name='email' rules={[{ required: true, message: 'Please input your Email!' }]}>
+                            <Input className='login_input' placeholder='Email' />
+                        </Form.Item>
+                        <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Please input your Password!' }]}>
+                            <Input.Password className='login_input' placeholder='Password' />
+                        </Form.Item>
+                        <button className='primary-button-login' type='submit' disabled={loading}>
+                            {loading ? 'Logging in...' : 'LOGIN'}
+                        </button>
+                    </Form>
 
-            <button className='primary-button-login' type='submit' disabled={loading}>
-              {loading ? 'Logging in...' : 'LOGIN'}
-            </button>
+                    {/* Divider */}
+                    <div className="divider-container">
+                        <div className="divider-line"></div>
+                        <span className="divider-text">or</span>
+                        <div className="divider-line"></div>
+                    </div>
 
-            <p className='para'>
-              Don't have an account? <Link to='/signup' className='anchor'>SIGN UP</Link>
-            </p>
-          </Form>
+                    {/* Google Button */}
+                    <button className="google-login-btn" onClick={handleGoogleLogin}>
+                        <span className="google-icon">
+                            <img src="https://www.google.com/favicon.ico" alt="Google" width="18" height="18" />
+                        </span>
+                        <span className="google-text">Continue with Google</span>
+                    </button>
+
+                    <p className='para'>
+                        Don't have an account? <Link to='/signup' className='anchor'>SIGN UP</Link>
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default Login;

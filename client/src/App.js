@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/header/Header';
 import Contact from './pages/contact/Contact';
@@ -30,8 +30,19 @@ import Details5 from './pages/FertilizersAndPesticides/details5';
 import Disposal from './pages/FertilizersAndPesticides/disposal';
 import Solutions from './pages/FertilizersAndPesticides/solutions';
 import ManageMySolution from './pages/contact/ManageMySolution';
-import Profile from './pages/profile/Profile';   
+import Profile from './pages/profile/Profile';
+
 function App() {
+
+    //This runs once on page load
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("token", token);
+      window.history.replaceState({}, document.title, "/"); // clean URL
+    }
+  }, []);
   return (
     <BrowserRouter>
     <Header />

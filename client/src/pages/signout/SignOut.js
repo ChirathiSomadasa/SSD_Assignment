@@ -1,26 +1,20 @@
-import {useCookies} from 'react-cookie';
-import {useNavigate} from 'react-router-dom';
+// src/pages/SignOut.js
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-function SignOut(){
+function SignOut() {
+    const [cookies, setCookies] = useCookies(['auth_email']);
+    const navigate = useNavigate();
 
-    const[cookies,setCookies] = useCookies(["auth_email","user_type"]);
-    var navigate = useNavigate();
+    useEffect(() => {
+        // Clear JWT and email
+        localStorage.removeItem('token');
+        setCookies('auth_email', '', { expires: new Date(0) });
+        navigate('/login');
+    }, [navigate, setCookies]);
 
-    useEffect(function(){
-
-        setCookies("auth_email", null);
-        setCookies("auth_password", null);
-
-        //redirect login
-        navigate("/login");
-
-    });
-
-    return(
-        "Please wait..."
-    );
+    return <p>Please wait...</p>;
 }
-
 
 export default SignOut;

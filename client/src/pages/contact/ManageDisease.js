@@ -3,15 +3,15 @@ import React from 'react';
 import './ManageDisease.css';
 import axios from 'axios';
 import { MdDeleteOutline, MdEdit } from "react-icons/md";
-import { useAuthEmail, useAuthPassword } from '../../auth'
+//import { useAuthEmail, useAuthPassword } from '../../auth'
 import { useNavigate } from 'react-router-dom';
 
 
 function ManageDisease() {
   const [contactData, setContactData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const authEmail = useAuthEmail();
-  const authPassword = useAuthPassword();
+  //const authEmail = useAuthEmail();
+  //const authPassword = useAuthPassword();
   const navigate = useNavigate();
 
 
@@ -70,12 +70,12 @@ function ManageDisease() {
     }
   }
 
-  if (authEmail == null || authPassword == null) {
+  /*if (authEmail == null || authPassword == null) {
     navigate('/login');
-    return null;
+    return null;*/
 
 
-  } else {
+  
     return (
       <div>
         <div class="SStoreSearch">
@@ -129,7 +129,7 @@ function ManageDisease() {
 
 
     );
-  }
+  
 }
 
 export default ManageDisease;

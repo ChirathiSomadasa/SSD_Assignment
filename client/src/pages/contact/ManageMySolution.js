@@ -3,14 +3,14 @@ import React from 'react';
 import './ManageMySolution.css'; // Ensure CSS file contains relevant styles
 import axios from 'axios';
 import { MdDeleteOutline, MdEdit } from "react-icons/md";
-import { useAuthEmail, useAuthPassword } from '../../auth';
+//import { useAuthEmail, useAuthPassword } from '../../auth';
 import { useNavigate } from 'react-router-dom';
 
 function ManageMySolution() {
     const [contactData, setContactData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const authEmail = useAuthEmail();
-    const authPassword = useAuthPassword();
+    //const authEmail = useAuthEmail();
+    //const authPassword = useAuthPassword();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -65,10 +65,10 @@ function ManageMySolution() {
 
 
 
-    if (authEmail == null || authPassword == null) {
+    /*if (authEmail == null || authPassword == null) {
         navigate('/login');
-        return null;
-    } else {
+        return null;*/
+   
         return (
             <div>
 
@@ -113,7 +113,7 @@ function ManageMySolution() {
                 </div>
             </div>
         );
-    }
+    
 }
 
 export default ManageMySolution;
