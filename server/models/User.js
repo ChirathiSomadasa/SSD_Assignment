@@ -1,19 +1,16 @@
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
-const objectId = Schema.ObjectId;
+// models/User.js
+const mongoose = require("mongoose");
 
-var userSchema = new Schema(
-    {
-        id: objectId,
-        first_name:{type:String, required:true},
-        last_name:{type:String, required:true},
-        mobile_number:{type:String, required:true},
-        email:{type:String,required:true},
-        city:{type:String,required:true},
-        password:{type:String,required:true},
-        profile_pic:{type:String}
-    }
-);
+const userSchema = new mongoose.Schema({
+  googleId: { type: String, unique: true, sparse: true }, // for Google users
+  first_name: { type: String },
+  last_name: { type: String },
+  mobile_number: { type: String },
+  email: { type: String, required: true, unique: true },
+  city: { type: String },
+  password: { type: String }, 
+  profile_pic: { type: String },
+  user_type: { type: String, default: "user" }
+});
 
-var user = mongoose.model("user", userSchema);
-module.exports = user;
+module.exports = mongoose.model("User", userSchema);
