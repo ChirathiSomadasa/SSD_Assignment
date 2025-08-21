@@ -6,9 +6,18 @@ import Fertilizer from './pages/fertilizers/fertilizer';
 import Contact from './pages/contact/Contact';
 import Solution from './pages/contact/Solution';
 import User from './pages/user/User';
-
+import { useIsAdmin } from './auth';
 
 function App() {
+    const isAdmin = useIsAdmin();
+
+  if (!isAdmin) {
+    return (
+      <div className="unauthorized">
+        <h2>You cannot access this page directly</h2>
+      </div>
+    );
+  }
   return (
     <BrowserRouter>
       <Header />

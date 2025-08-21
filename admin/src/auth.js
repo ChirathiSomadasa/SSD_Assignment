@@ -1,29 +1,28 @@
-import { useCookies } from 'react-cookie';
+// admin/src/auth.js
+import { useCookies } from "react-cookie";
 
-function useAuthEmail(){
-
-    const [cookies, setCookies] = useCookies(["admin_auth_email"]);
-    var authToken = cookies.admin_auth_email;
-    
-    if(authToken == undefined){
-        return null;
-    }else{
-        return authToken;
-    }
-    
+// Get JWT Token (stored in cookies)
+function useAdminToken() {
+  const [cookies] = useCookies(["admin_token"]);
+  return cookies.admin_token || null;
 }
 
-function useAuthPassword(){
-
-    const[cookies,setCookies] = useCookies(["admin_auth_password"]);
-    var authToken = cookies.admin_auth_password;
-    
-    if(authToken == undefined){
-        return null;
-    }else{
-        return authToken;
-    }
-    
+// Decode JWT to check if user is admin
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split(".")[1])); // decode payload
+  } catch (e) {
+    return null;
+  }
 }
 
-export { useAuthEmail,useAuthPassword };
+// Check if admin is authenticated
+function useIsAdmin() {
+  const token = useAdminToken();
+  if (!token) return false;
+
+  const decoded = parseJwt(token);
+  return decoded?.userType === "admin"; // only admins allowed
+}
+
+export { useAdminToken, useIsAdmin };

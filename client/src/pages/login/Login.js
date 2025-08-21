@@ -21,13 +21,22 @@ function Login() {
                 const data = response.data;
 
                 if (data.status === 'success') {
-                    // Store JWT and email
+                    // Store JWT in localStorage for general use
                     localStorage.setItem('token', data.token);
                     setCookies('auth_email', data.email, { path: '/' });
-                    navigate('/');
-                } else {
-                    alert(data.message || 'Login failed');
+
+                    if (data.user_type === 'admin') {
+                        // Also store token in admin_token cookie for admin validation
+                        setCookies('admin_token', data.token, { path: '/' });
+
+                        // Redirect admin to admin panel (port 3001)
+                        window.location.href = 'http://localhost:3001/';
+                    } else {
+                        // Normal user navigate to home
+                        navigate('/');
+                    }
                 }
+
             })
             .catch((error) => {
                 setLoading(false);
