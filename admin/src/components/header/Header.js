@@ -1,58 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../images/logo.png';
-
-
+import { useCookies } from "react-cookie";
 
 function Header() {
+  const [cookies, setCookies, removeCookie] = useCookies(["admin_token"]);
+  const [openNavMenu, setOpenNavMenu] = useState(false);
+  const navigate = useNavigate();
 
   var menu = [
-    {
-      name: "Admin Dashboard",
-      icon: "home",
-      navigate: "adminhome",
-    },
-    {
-      name: "Users",
-      icon: "person",
-      navigate: "user",
-    },
-    {
-      name: "Yield Prediction",
-      icon: "grass",
-      navigate: "prediction",
-    },
-    {
-      name: "Fertilizers & Pesticides",
-      icon: "agriculture",
-      navigate: "fertilizers",
-    },
-    {
-      name: "Diseases",
-      icon: "healing", // Icon for Questions
-      navigate: "contact/Contact", // Define your navigation route for Questions
-    },
-    {
-      name: "Solutions",
-      icon: "lightbulb", // Icon for Answers
-      navigate: "contact/Solution", // Define your navigation route for Answers
-    },
-   ];
-
-  const[openNavMenu,setOpenNavMenu] = useState(false);
-  var navigate = useNavigate();
+    { name: "Admin Dashboard", icon: "home", navigate: "adminhome" },
+    { name: "Users", icon: "person", navigate: "user" },
+    { name: "Yield Prediction", icon: "grass", navigate: "prediction" },
+    { name: "Fertilizers & Pesticides", icon: "agriculture", navigate: "fertilizers" },
+    { name: "Diseases", icon: "healing", navigate: "contact/Contact" },
+    { name: "Solutions", icon: "lightbulb", navigate: "contact/Solution" },
+  ];
 
   function onMenuClick(id) {
-    if (id != undefined) {
-      navigate(id);
-    }
+    if (id !== undefined) navigate(id);
   }
 
   function onSubMenuClick(id) {
-    if (id != undefined) {
-      navigate(id);
-    }
+    if (id !== undefined) navigate(id);
+  }
+
+  // Sign out handler
+  function handleSignOut() {
+    // Remove JWT cookie
+    removeCookie("admin_token", { path: "/" });
+    // Clear localStorage if you stored it there too
+    localStorage.removeItem("token");
+    // Redirect to login page
+    window.location.href = "http://localhost:3000/login";
   }
 
   useEffect(() => {
@@ -65,15 +46,12 @@ function Header() {
       sidenavOut.style.display = "none";
       sidenav.style.marginLeft = "-250px";
     }
-  });
+  }, [openNavMenu]);
 
   return (
-
     <>
-
       <div className='header'>
         <div className='header-container'>
-
           <div onClick={() => setOpenNavMenu(true)} className='nav-menu-btn'>
             <span className="material-icons-round">menu</span>
           </div>
@@ -86,16 +64,17 @@ function Header() {
             <h2 className='headerTopic'> Admin Dashboard</h2>
           </div>
 
-
+          {/* Sign Out button */}
+          <div className='signout-btn'>
+            <button onClick={handleSignOut}>Sign Out</button>
+          </div>
         </div>
       </div>
 
       <div onClick={() => { setOpenNavMenu(false) }} id='sidenavOut' className='sidenav-out'></div>
       <div id='sidenav' className="sidenav">
         <div className='sidenav-container'>
-
-          {menu.map((item) =>
-
+          {menu.map((item) => (
             <div key={item.name} className='sidenav-item'>
               <div onClick={() => onMenuClick(item.navigate)} className='sidenav-item-main'>
                 <div className='sidenav-item-container'>
@@ -104,36 +83,24 @@ function Header() {
                 </div>
               </div>
 
-              {(item.sub_menu != undefined) ? (
-
+              {item.sub_menu !== undefined ? (
                 <div className='sidenav-sub-item-container'>
-
-                  {item.sub_menu.map((submenu) =>
-
-                    <div onClick={() => onSubMenuClick(submenu.navigate)} key={submenu.name} className='sidenav-item-sub-main'>
+                  {item.sub_menu.map((submenu) => (
+                    <div
+                      onClick={() => onSubMenuClick(submenu.navigate)}
+                      key={submenu.name}
+                      className='sidenav-item-sub-main'
+                    >
                       <p>{submenu.name}</p>
                     </div>
-                    
-
-                  )}
-
+                  ))}
                 </div>
-
               ) : ("")}
-
-
             </div>
-
-          )}
-
-
-
+          ))}
         </div>
       </div>
-
     </>
-
-
   );
 }
 
