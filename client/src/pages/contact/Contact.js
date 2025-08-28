@@ -219,18 +219,18 @@ function Contact() {
 
   return (
     <div>
-      <div className='Qparallax'>
-        <div className="Qcentered">
+      <div class='Qparallax'>
+        <div class="Qcentered">
           <h1>Smart Farming, Better Solutions</h1>
         </div>
       </div>
 
-      <div className='QWelcomeContent'>
-        <div className='Qwelcome_topic'> <h1>Why Choose our Services</h1></div>
+      <div class='QWelcomeContent'>
+        <div class='Qwelcome_topic'> <h1>Why Choose our Services</h1></div>
 
-        <div className='Qwelcome'>
+        <div class='Qwelcome'>
 
-          <div className='Qwelcome_des'>
+          <div class='Qwelcome_des'>
             <p>Improve your rice cultivation with RiceSmart's innovative equipment and expert advice.
               We offer real-time disease monitoring and accurate production
               estimates to enhance your farming methods.
@@ -253,7 +253,7 @@ function Contact() {
 
           </div>
 
-          <div className='Qwelcome_photo'><img src={serviceImage} alt="welcome" /></div>
+          <div class='Qwelcome_photo'><img src={serviceImage} alt="welcome" /></div>
         </div>
 
       </div>
@@ -266,49 +266,48 @@ function Contact() {
       </div>
       <div class="QaddBtn">
         <Link to="/Contact/AddProblem">
-          <div><button type="primary" onClick={handleAddProblem} className="Qadd-problem-button">Add Disease
+          <div><button type="primary" onClick={handleAddProblem} class="Qadd-problem-button">Add Disease
           </button></div>
         </Link>
         <Link to="/Contact/ManageDisease">
-          <div><button type="primary" onClick={handleDisease} className="Qmanagebtn">My Diseases
+          <div><button type="primary" onClick={handleDisease} class="Qmanagebtn">My Diseases
           </button></div>
         </Link>
         <Link to="/Contact/ManageMySolution">
-          <div><button type="primary" onClick={handleMySolution} className="Qsolbtn">My Solutions
+          <div><button type="primary" onClick={handleMySolution} class="Qsolbtn">My Solutions
           </button></div>
         </Link>
         <Link >
-          <div><button type="primary" onClick={generateReport} className="Qgeneratebtn">Generate Report
+          <div><button type="primary" onClick={generateReport} class="Qgeneratebtn">Generate Report
           </button></div>
         </Link>
       </div>
-      <div class="QContactStore">
+       <div class="QContactStore">
         {
           contactData.map((contact) => (
-            <div class="QContactCard" key={contact._id}>
-              <h7>{contact.category}</h7>
-              <br></br>
+            <div class="QContactCard" key={contact._id}> 
+              <p><strong>{contact.category}</strong></p>
               <p><strong>Disease</strong> <br>
               </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{contact.disease}</p>
               <p><strong>Symptoms   </strong><br></br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{contact.description}</p><br></br>
 
                 <p>
-                <MdOutlineLocationOn className="QlocationIcon" onClick={() => handleLocationClick(contact.location)} // Pass the location data
+                <MdOutlineLocationOn class="QlocationIcon" onClick={() => handleLocationClick(contact.location)} 
                 />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{contact.location}
                 </p>
               <div>
                 <h4>Solutions:</h4>
                 {
                   contact.solutions.map((sol, index) => (
-                    <ul >
-                      <li key={index}> {sol.solution}</li>
+                    <ul key={index}> 
+                      <li> {sol.solution}</li>
                     </ul>
                   ))
                 }
               </div>
               <div class="QCardActions">
-                <div><button type="primary" onClick={() => handleSolution(contact._id)} className="QSolutionbtn">Add Solution
+                <div><button type="primary" onClick={() => handleSolution(contact._id)} class="QSolutionbtn">Add Solution
                 </button></div>
               </div>
             </div>

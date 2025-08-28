@@ -158,13 +158,13 @@
     float:left !important;
     background-color: #053106 !important;
     margin-top: 10px !important;
-    margin-left: 60px !important;
+    margin-left: 150px !important;
     border-radius: 10px !important;
  }
 
 .QStoreSearch{
      margin-top: 20px !important;
-    margin-left: 960px !important;
+    margin-left: 1080px !important;
     margin-right: 40px !important;
 }
 
@@ -174,119 +174,103 @@
     outline: none !important;
     border: none !important;
     width: 250px !important;
-    margin-left: 10px !important;
     background-color: #77777744 !important;
 }
-  
 .QContactStore {
-  
-  flex-direction: column !important; /* Stack cards vertically */
-  align-items: center !important;
-  gap: 20px !important;
-  width: 1200px !important;
-  margin: 40px auto !important;
-  height: auto !important;
-  font-family: Georgia, 'Times New Roman', Times, serif !important;
-  padding-top: 30px !important;
-  display: flex !important;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Responsive grid */
+  gap: 25px;
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding-top: 30px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.QContactCard {
-  background-color: #a78686;
-  width: 600px; /* Make the card width occupy most of the row */
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+ .QContactCard {
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
   display: flex;
   flex-direction: column;
 }
 
-.QContactCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(18, 214, 83, 0.37);
-  background-color: #23e2432d;
+ .QContactCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #fdfdfd, #eef9f0);
 }
 
-.QContactCard h3 {
+ .QContactCard h3 {
   color: #4CAF50;
   margin-bottom: 10px;
 }
 
 .QContactCard p {
-  margin: 5px 0;
-  color: #555;
+  margin: 6px 0;
+  color: #444;
+  font-size: 0.95rem;
 }
 
-.QCardActions {
+ ul {
+  margin-left: 20px;
+  margin-top: 8px;
+}
+li {
+  list-style-type: disc;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+ .QlocationIcon {
+  font-size: 22px;
+  color: #ff5722;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  vertical-align: middle;
+}
+.QlocationIcon:hover {
+  color: #e64a19;
+}
+
+ .QCardActions {
+  margin-top: auto; /* Push actions to bottom */
   display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
-}
-
-h7 {
-  color: #2C5F2D;
-  font-weight: bold;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  }
-  
-.QContactCard {
-  position: relative; /* Allow positioning of child elements */
-  border: 1px solid #ddd; /* Card border */
-  padding: 20px; /* Padding inside the card */
-  margin-bottom: 20px; /* Space between cards */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Card shadow */
-  background-color: #fff; /* White background */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.QlocationIcon{
-  position: absolute;
-   
-  padding-bottom: 10px;
-   font-size: 24px; /* Icon size */
-  color: #0f0f0f; /* Blue color for the edit icon */
-  cursor: pointer; /* Show pointer on hover */
-  transition: color 0.3s ease; /* Smooth color transition */
-}
-
-
-.QCardActions {
-  margin-top: 15px;
-  display: flex;
-  justify-content: space-between; /* Space between the edit and delete buttons */
+  justify-content: flex-end;
   align-items: center;
 }
 
-.QSolutionbtn{
-  display: block !important;
-    width: fit-content !important;
-    background-color: #0d1135 !important; /* Green background */
-    color: white !important; /* White text */
-    font-size: 15px !important; /* Larger text size */
-    border-radius: 10px !important; /* Rounded corners */
-    margin-left: 470px !important;
-     font-weight: bold !important;
-     padding: 8px !important;
-    outline: none !important;
-    border: none !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-    cursor: pointer !important;
+ .QSolutionbtn {
+  background: #0d1135;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
-.QlocationLink {
-  text-decoration: none; /* Remove underline */
+.QSolutionbtn:hover {
+  background: #04601b;
 }
 
-ul{
-  margin-left: 15px;
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 992px) {
+  .QContactStore {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 2 per row on tablets */
+  }
+}
+@media (max-width: 600px) {
+  .QContactStore {
+    grid-template-columns: 1fr; /* Single column on mobile */
+  }
 }
 
-li{
-  list-style-type:    disc ;
-  margin-left: 15px;
-}
   
 .underlined-text {
   text-decoration: none;        /* Start without underline */
@@ -302,3 +286,7 @@ li{
 }
 
  
+
+
+
+
