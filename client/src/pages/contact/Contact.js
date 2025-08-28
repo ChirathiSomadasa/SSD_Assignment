@@ -257,13 +257,6 @@ function Contact() {
         </div>
 
       </div>
-
-      <div class="QStoreSearch">
-        <input type="text" class="QSearch" onClick={handleSearch} value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}  // Update search query state
-          onKeyPress={handleKeyPress}  // Listen for "Enter" key press
-          placeholder="Search by category..." />
-      </div>
       <div class="QaddBtn">
         <Link to="/Contact/AddProblem">
           <div><button type="primary" onClick={handleAddProblem} class="Qadd-problem-button">Add Disease
@@ -281,6 +274,10 @@ function Contact() {
           <div><button type="primary" onClick={generateReport} class="Qgeneratebtn">Generate Report
           </button></div>
         </Link>
+        <input type="text" class="QSearch" onClick={handleSearch} value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}  // Update search query state
+          onKeyPress={handleKeyPress}  // Listen for "Enter" key press
+          placeholder="Search by category..." />
       </div>
        <div class="QContactStore">
         {

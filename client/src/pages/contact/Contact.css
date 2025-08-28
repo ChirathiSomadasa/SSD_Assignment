@@ -140,7 +140,7 @@
     color: rgb(15, 12, 12) !important; /* White text */
     font-size: 15px !important; /* Larger text size */
     border-radius: 10px !important; /* Rounded corners */
-    margin-left: 500px !important;
+    margin-left: 300px !important;
     margin-top: 10px !important;
      font-weight: bold !important;
     float: left !important;
@@ -162,19 +162,23 @@
     border-radius: 10px !important;
  }
 
-.QStoreSearch{
-     margin-top: 20px !important;
-    margin-left: 1080px !important;
-    margin-right: 40px !important;
-}
-
 .QSearch{
-    padding: 10px !important;
-    border-radius: 10px !important;
+  display: block !important;
+    width: fit-content !important;
+    background-color: #ffffff !important; /* Green background */
+    color: rgb(15, 12, 12) !important; /* White text */
+    font-size: 15px !important; /* Larger text size */
+    border-radius: 10px !important; /* Rounded corners */
+    margin-left: 10px !important;
+    margin-top: 10px !important;
+    float: left !important;
+    padding: 8px !important;
     outline: none !important;
     border: none !important;
-    width: 250px !important;
-    background-color: #77777744 !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    cursor: pointer !important;
+    
 }
 .QContactStore {
   display: grid;
