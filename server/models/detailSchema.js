@@ -9,7 +9,9 @@ const detailSchema = new mongoose.Schema({
     phoneNumber: { 
         type: String, 
         required: true, 
-        match: /^\d{10}$/  // Regex for 10-digit phone numbers
+        match: /^\d{10}$/,
+        unique: true ,
+        index: true  
     },
     address: { 
         type: String, 
@@ -30,7 +32,8 @@ const detailSchema = new mongoose.Schema({
     },
     amount: { 
         type: Number, 
-        required: true 
+        required: true,
+        min: 1  
     },
     unit: { 
         type: String, 
@@ -38,17 +41,27 @@ const detailSchema = new mongoose.Schema({
     },
     price: { 
         type: Number, 
-        required: true 
+        required: true ,
+        min: 0 
     },
     status: { 
         type: String, 
         enum: ['pending', 'approved', 'rejected'], 
         default: 'pending' 
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",                  // track who created it
+      required: true
     }
+  },
+  { 
+    timestamps: true,               // adds createdAt + updatedAt
+    strict: "throw"                 // 🚨 prevents mass-assignment
 });
 
 
-detailSchema.index({ phoneNumber: 1 });
+detailSchema.index({ phoneNumber: 1 }, { unique: true });
 
 const Detail = mongoose.model("Detail", detailSchema);
 module.exports = Detail;
