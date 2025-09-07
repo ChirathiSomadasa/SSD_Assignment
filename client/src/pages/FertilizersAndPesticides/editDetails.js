@@ -22,6 +22,7 @@ const UNIT_CONVERSIONS = {
 
 const fertilizerNames = ["UNIPOWER YaraMila Complex", "PADDY GROW - Paddy Microbial Consortia", "Tata Rallis RALLIGOLD GR BIO FERTILIZER", "IFFCO Nano DAP"];
 const pesticideNames = ["Ricestar Fenoxaprop-p-ethyl 6.9 EC", "Dhanuka Cover Chlorantraniliprole 18.5% SC", "GOLDPOWER Captan 70% + Hexaconazole 5% WP", "Tata CONTAF PLUS Hexaconazole 5% SC", "Katyayani Chloda | Chlorantraniliprole 9.3%", "Bispyribac Sodium 10% SC", "PRETGOLD Pretilachlor 50% EC", "FMC Ferterra Chlorantraniliprole 0.4% ww GR"];
+const token = localStorage.getItem('token');
 
 function EditDetails() {
     const [detail, setDetail] = useState({
@@ -45,7 +46,10 @@ function EditDetails() {
     useEffect(() => {
         const fetchDetail = async () => {
             try {
-                const response = await axios.get(`http://localhost:5001/details/${id}`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`http://localhost:5001/details/details/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
                 const fetchedDetail = response.data.data;
                 setDetail(fetchedDetail);
                 setOriginalDetail(fetchedDetail);
@@ -160,27 +164,34 @@ function EditDetails() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        if (validateForm()) {
-            const hasChanges = JSON.stringify(detail) !== JSON.stringify(originalDetail);
+    if (!validateForm()) {
+        alert('Please fix the errors in the form');
+        return;
+    }
 
-            if (hasChanges) {
-                try {
-                    await axios.put(`http://localhost:5001/details/${id}`, detail);
-                    alert("Details updated successfully");
-                    navigate('/view');
-                } catch (error) {
-                    console.error('Error updating details:', error);
-                    alert(`An error occurred while updating details: ${error.response?.data?.message || error.message}`);
-                }
-            } else {
-                alert('No changes were made');
-            }
-        } else {
-            alert('Please fix the errors in the form');
-        }
-    };
+    const hasChanges = JSON.stringify(detail) !== JSON.stringify(originalDetail);
+    if (!hasChanges) {
+        alert('No changes were made');
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('token');
+
+        await axios.put(`http://localhost:5001/details/details/${id}`, detail, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        alert("Details updated successfully");
+        navigate('/view');
+    } catch (error) {
+        console.error('Error updating details:', error);
+        alert(`An error occurred while updating details: ${error.response?.data?.message || error.message}`);
+    }
+};
+
 
     if (isLoading) {
         return <div>Loading...</div>;

@@ -94,7 +94,6 @@ function AddDetails() {
                     delete newErrors.receiverName;
                 }
                 break;
-            
 
             case 'phoneNumber':
                 if (!value) newErrors.phoneNumber = "Phone Number is required.";
@@ -146,18 +145,12 @@ function AddDetails() {
         if (!detail.receiverName) newErrors.receiverName = "Receiver's Name is required.";
         if (!detail.phoneNumber) newErrors.phoneNumber = "Phone Number is required.";
         if (!/^\d{10}$/.test(detail.phoneNumber)) newErrors.phoneNumber = "Phone Number must be exactly 10 digits.";
-
         if (!detail.address) newErrors.address = "Address is required.";
-
         if (!detail.productType) newErrors.productType = "Product Type is required.";
-
         if (!detail.productName) newErrors.productName = "Product Name is required.";
-
         if (!detail.brand) newErrors.brand = "Brand is required.";
-
         if (!detail.amount) newErrors.amount = "Amount is required.";
         if (!/^\d+(\.\d+)?$/.test(detail.amount)) newErrors.amount = "Amount must be a number.";
-
         if (!detail.unit) newErrors.unit = "Unit is required.";
 
         setErrors(newErrors);
@@ -168,30 +161,52 @@ function AddDetails() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validateForm()) {
-            try {
-                const response = await axios.post("http://localhost:5001/addDetails", detail);
-                console.log(response);
-                alert("Details added successfully!");
-                setDetail({
-                    receiverName: "",
-                    address: "",
-                    phoneNumber: "",
-                    productType: "",
-                    productName: "",
-                    brand: "",
-                    amount: "",
-                    unit: "",
-                    price: ""
-                });
-                setErrors({});
-                
-            } catch (error) {
-                console.error('Error adding details:', error);
+
+        if (!validateForm()) {
+            alert("Please correct the errors in the form before submitting.");
+            return;
+        }
+
+        try {
+            // ✅ Get JWT token from localStorage
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("You must be logged in to add details.");
+                return;
+            }
+
+            const response = await axios.post(
+                "http://localhost:5001/details/addDetails",
+                detail,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}` // send token to backend
+                    }
+                }
+            );
+
+            console.log(response);
+            alert("Details added successfully!");
+            setDetail({
+                receiverName: "",
+                address: "",
+                phoneNumber: "",
+                productType: "",
+                productName: "",
+                brand: "",
+                amount: "",
+                unit: "",
+                price: ""
+            });
+            setErrors({});
+
+        } catch (error) {
+            console.error('Error adding details:', error);
+            if (error.response && error.response.status === 401) {
+                alert("Unauthorized! Please login again.");
+            } else {
                 alert('Error adding details. Please try again later.');
             }
-        } else {
-            alert("Please correct the errors in the form before submitting.");
         }
     };
 
@@ -250,7 +265,7 @@ function AddDetails() {
                             {errors.address && <span className="error-text">{errors.address}</span>}
                         </div>
                     </div>
-                    
+
                     <div className="form-column">
                         <h2 className="topic1">Product Details</h2>
                         <div className="form-group">
@@ -346,7 +361,7 @@ function AddDetails() {
                         </div>
                     </div>
                 </div>
-                
+
                 <button type="submit" className="refill_button">Submit Details</button>
             </form>
         </div>
