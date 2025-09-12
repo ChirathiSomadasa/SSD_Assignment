@@ -1,3 +1,138 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import './ProblemForm.css';
+import { useAuthEmail, useAuthPassword } from '../../auth';
+
+
+function AddProblem() {
+    const navigate = useNavigate();
+    const [contactData, setContactData] = useState([]);
+    const [disease, setDisease] = useState('');
+    const [description, setDescription] = useState('');
+    const [category, setCategory] = useState('');
+    const [location, setLocation] = useState('');
+    const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
+
+
+    const authEmail = useAuthEmail();
+    const authPassword = useAuthPassword();
+    // useEffect(() => {
+    //     const fetchUsers = async () => {
+    //         try {
+    //             const response = await axios.get("http://localhost:5001/user/users");
+    //             if (response.data.status === "success") {
+    //                 const users = response.data.users;
+    //                 setContactData(users);
+    //             } else {
+    //                 setError(response.data.message);
+    //             }
+    //         } catch (err) {
+    //             setError("Error fetching users.");
+    //         }
+    //     };
+
+    //     fetchUsers();
+    // }, []);
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null); // Clear previous errors
+    setSuccessMessage(''); // Clear previous success messages
+
+    try {
+        const response = await axios.post("http://localhost:5001/AddProblem", {
+            disease,
+            description,
+            category,
+            location
+        });
+
+        // This only runs if the request is successful (200 status)
+        setSuccessMessage('Problem added successfully!');
+        alert('Disease added successfully!');
+
+        setDisease('');
+        setDescription('');
+        setCategory('');
+        setLocation('');
+        navigate('/contact');
+
+    } catch (err) {
+        // This runs if the request fails (network error, 400, 500, etc.)
+        if (err.response && err.response.status === 400) {
+            // This is a validation error from express-validator!
+            const validationErrors = err.response.data.errors;
+            
+            // Create a user-friendly message from all validation errors
+            const errorMessage = validationErrors.map(error => error.msg).join(', ');
+            
+            setError(errorMessage);
+            alert(`Validation Error: ${errorMessage}`);
+        } else {
+            // This is another type of error (network, server 500, etc.)
+            const errorMessage = err.message || 'Error adding problem. Please try again.';
+            setError(errorMessage);
+            alert(errorMessage);
+        }
+    }
+};
+        return (
+            <div class='QAddProblemForm'>
+                <div class ='Qaddproblem_photo'>
+                    <br /><br />
+                    <form class ="PAproductForm" onSubmit={handleSubmit}>
+                        <h2 class ="PAtopic">Add Disease</h2>
+                        <div class ="PAform-group">
+                            <label>Disease:</label>
+                            <input type="text" class="PAinarea" placeholder='Enter Disease' value={disease} onChange={(e) => setDisease(e.target.value)} required />
+                        </div>
+                        <div class="PAform-group">
+                            <label>Description:</label>
+                            <textarea class="PAinarea" placeholder='Enter Description' value={description} onChange={(e) => setDescription(e.target.value)} required />
+                        </div>
+                        <div class="PAform-group">
+                            <label>Category:</label>
+                            <select id="productCategory" class="PAinarea" value={category} onChange={(e) => setCategory(e.target.value)} required>
+                                <option>Select Category</option>
+                                <option>Sowing Season</option>
+                                <option>Growing Season</option>
+                                <option>Harvesting Season</option>
+                                <option>Resting Season</option>
+                            </select>
+                        </div>
+                        <div class="PAform-group">
+                            <label>Location:</label>
+                            <input type="text" class="PAinarea" placeholder='Enter Location' value={location} onChange={(e) => setLocation(e.target.value)} />
+                        </div>
+                        <br />
+                        <button type="submit" class="PAbtn">Submit</button>
+                    </form>
+                    {error && <p>{error}</p>}
+                    {successMessage && <p>{successMessage}</p>}
+
+                </div>
+                
+            </div>
+        );
+    }
+
+
+export default AddProblem;
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
