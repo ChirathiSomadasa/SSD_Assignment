@@ -6,7 +6,8 @@ import axios from 'axios';
 import { MdOutlineLocationOn } from "react-icons/md";
 import { jsPDF } from "jspdf";
 import Logo from '../../images/logo.png';
-import serviceImage from '../../images/Contact/Qwelcome.jpg';  // Make sure to place your image in the public/images folder or src/images folder
+import serviceImage from '../../images/Contact/Qwelcome.jpg';  
+import DOMPurify from 'dompurify';
 
 
 function Contact() {
@@ -284,10 +285,11 @@ function Contact() {
           contactData.map((contact) => (
             <div class="QContactCard" key={contact._id}> 
               <p><strong>{contact.category}</strong></p>
-              <p><strong>Disease</strong> <br>
-              </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{contact.disease}</p>
+              <p><strong>Disease</strong>
+               <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contact.disease) }} /></p>
               <p><strong>Symptoms   </strong><br></br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{contact.description}</p><br></br>
+                 <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contact.description) }} /></p>
+                 <br></br>
 
                 <p>
                 <MdOutlineLocationOn class="QlocationIcon" onClick={() => handleLocationClick(contact.location)} 
@@ -298,7 +300,7 @@ function Contact() {
                 {
                   contact.solutions.map((sol, index) => (
                     <ul key={index}> 
-                      <li> {sol.solution}</li>
+                      <li dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sol.solution) }} />
                     </ul>
                   ))
                 }

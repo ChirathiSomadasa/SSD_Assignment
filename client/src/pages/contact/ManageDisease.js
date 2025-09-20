@@ -85,10 +85,10 @@ function ManageDisease() {
             placeholder="Search by category..." />
         </div>
 
-        <div class="SContactStore">
+        <div class="SContactStoreP">
           <br></br><br></br>
           <h2>Manage Diseases Results</h2>
-          <table className="SContactTable">
+          <table className="SContactTableP">
             <thead>
               <tr>
                 <th>Category</th>

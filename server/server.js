@@ -150,32 +150,38 @@ app.post("/AddProblem",validateProblem, async (req, res) => {
   }
 });
 // Add a problem (FIXED CODE)
-app.post("/AddProblem", validateProblem, async (req, res) => {
-  // 1. Check for validation errors from the validateProblem middleware
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() }); // Send detailed error messages
-  }
+// app.post("/AddProblem", validateProblem, async (req, res) => {
+//   // 1. Check for validation errors from the validateProblem middleware
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return res.status(400).json({ errors: errors.array() }); // Send detailed error messages
+//   }
 
-  try {
-    // Destructure the sanitized fields from req.body
-    const { disease, description, category, location } = req.body;
+//   try {
+//     // Destructure the sanitized fields from req.body
+//     const { disease, description, category, location } = req.body;
 
-    // 3. Create a new problem using the sanitized data
-    const newProblem = new ContactModel({
-      disease,
-      description,
-      category,
-      location
-    });
+//     // 3. Create a new problem using the sanitized data
+//     const newProblem = new ContactModel({
+//       disease,
+//       description,
+//       category,
+//       location
+//     });
 
-    await newProblem.save();
-    res.status(200).json({ message: 'Problem added successfully!', data: newProblem });
-  } catch (err) {
-    res.status(500).json({ error: 'Error adding problem' });
-  }
-});
+//     await newProblem.save();
+//     res.status(200).json({ message: 'Problem added successfully!', data: newProblem });
+//   } catch (err) {
+//     res.status(500).json({ error: 'Error adding problem' });
+//   }
+// });
 
+const validateProblemUpdate = [
+  body('disease').optional().isString().trim().escape(),
+  body('description').optional().isString().trim().escape(),
+  body('category').optional().isString().trim().escape(),
+  body('location').optional().isString().trim().escape()
+];
 // const validateProblemUpdate = [
 //   body('disease').optional().trim().escape(), // Use optional(), not notEmpty()
 //   body('description').optional().trim().escape(),
@@ -184,7 +190,7 @@ app.post("/AddProblem", validateProblem, async (req, res) => {
 // ];
 
 // Update a problem
-app.put("/UpdateContact/:id", async (req, res) => {
+app.put("/UpdateContact/:id",validateProblemUpdate, async (req, res) => {
     const { id } = req.params;
     try {
         const updatedProblem = await ContactModel.findByIdAndUpdate(id, req.body, { new: true });
@@ -217,7 +223,7 @@ app.get('/getContact/:id', async (req, res) => {
 });
 
 const validateSolution = [
-  body('solution').notEmpty().trim().escape().withMessage('Solution text is required')
+  body('solution').notEmpty().trim().escape().withMessage('Solution text is required') 
 ];
 
 
