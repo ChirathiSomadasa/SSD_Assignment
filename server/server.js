@@ -16,6 +16,7 @@ const predictionRoute = require("./routes/prediction_route");
 const diseaseLocationRoutes = require("./routes/map/diseaseLocation");
 const locationNotificationRoutes = require("./routes/map/notification");
 const notificationRoute = require("./routes/map/notification_route");
+const detailsRoutes = require("./routes/router");
 
 // Models
 const ContactModel = require("./models/contact");
@@ -100,6 +101,8 @@ app.use("/prediction", predictionRoute);
 app.use("/api", diseaseLocationRoutes);
 app.use("/api_loc", locationNotificationRoutes);
 app.use("/notification", notificationRoute);
+app.use("/details", detailsRoutes);
+
 
 /*const express = require("express");
 const cors = require("cors");
