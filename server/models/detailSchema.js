@@ -57,7 +57,7 @@ const detailSchema = new mongoose.Schema({
   },
   { 
     timestamps: true,               // adds createdAt + updatedAt
-    strict: "throw"                 // 🚨 prevents mass-assignment
+    strict: "throw"                 // prevents mass-assignment
 });
 
 

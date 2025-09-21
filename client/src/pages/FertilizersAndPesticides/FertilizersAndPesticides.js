@@ -22,7 +22,7 @@ function FertilizersAndPesticides() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
 
-  // ✅ Check for user login
+  // Check for user login
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {

@@ -168,7 +168,7 @@ function AddDetails() {
         }
 
         try {
-            // ✅ Get JWT token from localStorage
+            // Get JWT token from localStorage
             const token = localStorage.getItem("token");
             if (!token) {
                 alert("You must be logged in to add details.");

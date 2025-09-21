@@ -114,8 +114,7 @@ router.get('/details/:id',requireAuth, async (req, res) => {
 });
 
 // Fetch all details
-// GET /getdetails
-// Fetch user-specific details with pagination + server-side search
+
 router.get('/getdetails', requireAuth, async (req, res) => {
   try {
     const userId = req.current_user.userId;
@@ -130,7 +129,7 @@ router.get('/getdetails', requireAuth, async (req, res) => {
     // Server-side search
     const search = req.query.search;
     if (search) {
-      const regex = new RegExp(search, 'i'); // case-insensitive
+      const regex = new RegExp(search, 'i'); 
       query.$or = [
         { receiverName: regex },
         { phoneNumber: regex },
@@ -153,7 +152,7 @@ router.get('/getdetails', requireAuth, async (req, res) => {
       .select('receiverName phoneNumber address productType productName brand amount unit price status createdAt updatedAt')
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 }); // newest first
+      .sort({ createdAt: -1 }); 
 
     res.status(200).json({
       message: 'Details retrieved successfully',
@@ -223,7 +222,7 @@ router.put("/details/:id", requireAuth, validateObjectId, async (req, res) => {
 // });
 
 
-// REPLACE approve/reject with audit + RBAC:
+// approve/reject with audit + RBAC:
 router.put("/details/:id/approve" , requireAuth, requireRole("admin"), validateObjectId, async (req, res) => {
   const updated = await details.findByIdAndUpdate(
     req.params.id,
