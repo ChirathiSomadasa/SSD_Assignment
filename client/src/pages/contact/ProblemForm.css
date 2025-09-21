@@ -1,7 +1,7 @@
 .Qaddproblem_photo {
     background-image: url(../../images/Contact/3.jpg);
-    width: 100%;
-    min-height: 800px;
+    width: auto;
+    min-height: 400px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -9,6 +9,8 @@
     justify-content: center;  /* Center horizontally */
     align-items: center;      /* Center vertically */
     padding: 20px;            /* Add some padding */
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .PAtopic {

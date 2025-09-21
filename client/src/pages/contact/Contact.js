@@ -7,6 +7,7 @@ import { MdOutlineLocationOn } from "react-icons/md";
 import { jsPDF } from "jspdf";
 import Logo from '../../images/logo.png';
 import serviceImage from '../../images/Contact/Qwelcome.jpg';  // Make sure to place your image in the public/images folder or src/images folder
+import DOMPurify from 'dompurify';
 
 
 function Contact() {
@@ -26,7 +27,7 @@ function Contact() {
     window.location.href = '/contact/ManageMySolution';
   };
 
-  const handleLocationClick =() =>{
+  const handleLocationClick = () => {
     window.location.href = '/map/Map';
   }
 
@@ -258,12 +259,7 @@ function Contact() {
 
       </div>
 
-      <div class="QStoreSearch">
-        <input type="text" class="QSearch" onClick={handleSearch} value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}  // Update search query state
-          onKeyPress={handleKeyPress}  // Listen for "Enter" key press
-          placeholder="Search by category..." />
-      </div>
+      
       <div class="QaddBtn">
         <Link to="/Contact/AddProblem">
           <div><button type="primary" onClick={handleAddProblem} className="Qadd-problem-button">Add Disease
@@ -281,6 +277,12 @@ function Contact() {
           <div><button type="primary" onClick={generateReport} className="Qgeneratebtn">Generate Report
           </button></div>
         </Link>
+        <div class="QStoreSearch">
+        <input type="text" class="QSearch" onClick={handleSearch} value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}  // Update search query state
+          onKeyPress={handleKeyPress}  // Listen for "Enter" key press
+          placeholder="Search by category..." />
+      </div>
       </div>
       <div class="QContactStore">
         {
@@ -288,21 +290,23 @@ function Contact() {
             <div class="QContactCard" key={contact._id}>
               <h7>{contact.category}</h7>
               <br></br>
-              <p><strong>Disease</strong> <br>
-              </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{contact.disease}</p>
-              <p><strong>Symptoms   </strong><br></br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{contact.description}</p><br></br>
+              <p><strong>Disease</strong>
+                <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contact.disease) }} /></p>
 
-                <p>
+              <p><strong>Symptoms   </strong><br></br>
+                <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contact.description) }} /></p>
+              <br></br>
+
+              <p>
                 <MdOutlineLocationOn className="QlocationIcon" onClick={() => handleLocationClick(contact.location)} // Pass the location data
                 />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{contact.location}
-                </p>
+              </p>
               <div>
                 <h4>Solutions:</h4>
                 {
                   contact.solutions.map((sol, index) => (
-                    <ul >
-                      <li key={index}> {sol.solution}</li>
+                    <ul key={index}>
+                      <li dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sol.solution) }} />
                     </ul>
                   ))
                 }
