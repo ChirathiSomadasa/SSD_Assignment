@@ -124,12 +124,12 @@ const validateProblem = [
   body('disease').isString().withMessage('Disease must be a text string.') // <- THIS IS THE KEY
                  .notEmpty().withMessage('Disease name is required.')
                  .trim()
-                 .escape() .customSanitizer(value => sanitizeHtml(value)), 
+                 .customSanitizer(value => sanitizeHtml(value)), 
 
   body('description').isString().withMessage('Description must be text.')
                     .notEmpty().withMessage('Description is required.')
                     .trim()
-                    .escape(),
+                    .customSanitizer(value => sanitizeHtml(value)), 
   body('category').isString().withMessage('Category must be text.')
                  .notEmpty().withMessage('Category is required.')
                  .trim()
@@ -138,20 +138,43 @@ const validateProblem = [
 ];
 
 // Add a problem
-app.post("/AddProblem",validateProblem, async (req, res) => {
-    // Check for validation errors
+// app.post("/AddProblem",validateProblem, async (req, res) => {
+//     // Check for validation errors
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return res.status(400).json({ errors: errors.array() });
+//   }
+
+//   // Proceed with sanitized data in req.body
+//   try {
+//     const { disease, description, category, location } = req.body; 
+//     const newProblem = new ContactModel({ disease, description, category, location });
+//     await newProblem.save();
+//     res.status(200).json({ message: 'Problem added successfully!', data: newProblem });
+//   } catch (err) {
+//     res.status(500).json({ error: 'Error adding problem' });
+//   }
+// });
+
+// Add a problem - WITH DEBUGGING
+app.post("/AddProblem", validateProblem, async (req, res) => {
+  // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log('Validation errors:', errors.array());
+    console.log('Request body:', req.body);
     return res.status(400).json({ errors: errors.array() });
   }
 
-  // Proceed with sanitized data in req.body
   try {
     const { disease, description, category, location } = req.body; 
+    console.log('Sanitized data:', { disease, description, category, location });
+    
     const newProblem = new ContactModel({ disease, description, category, location });
     await newProblem.save();
     res.status(200).json({ message: 'Problem added successfully!', data: newProblem });
   } catch (err) {
+    console.error('Database error:', err);
     res.status(500).json({ error: 'Error adding problem' });
   }
 });

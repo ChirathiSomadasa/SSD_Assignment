@@ -291,10 +291,10 @@ function Contact() {
               <h7>{contact.category}</h7>
               <br></br>
               <p><strong>Disease</strong>
-                <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contact.disease) }} /></p>
+                <p dangerouslySetInnerHTML={{ __html: contact.disease }} /></p>
 
               <p><strong>Symptoms   </strong><br></br>
-                <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contact.description) }} /></p>
+                <p dangerouslySetInnerHTML={{ __html: contact.description }} /></p>
               <br></br>
 
               <p>
@@ -306,7 +306,7 @@ function Contact() {
                 {
                   contact.solutions.map((sol, index) => (
                     <ul key={index}>
-                      <li dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sol.solution) }} />
+                      <li dangerouslySetInnerHTML={{ __html: sol.solution }} />
                     </ul>
                   ))
                 }

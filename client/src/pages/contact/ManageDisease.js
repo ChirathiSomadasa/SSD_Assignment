@@ -5,6 +5,8 @@ import axios from 'axios';
 import { MdDeleteOutline, MdEdit } from "react-icons/md";
 //import { useAuthEmail, useAuthPassword } from '../../auth'
 import { useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
+
 
 
 function ManageDisease() {
@@ -99,29 +101,36 @@ function ManageDisease() {
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {contactData.map((contact) => (
-                <tr key={contact._id}>
-                  <td className='thead'>{contact.category} </td>
-                  <td className='thead'>{contact.disease}</td>
-                  <td className='thead'>{contact.description}</td>
-                  <td className='thead'> {contact.location}</td>
-                  <td className='thead'>
-                    <ul>
-                      {contact.solutions.map((sol, index) => (
-                        <li key={index}>{sol.solution}</li>
-                      ))}
-                    </ul>
-                  </td>
+          <tbody>
+            {contactData.map((contact) => (
+              <tr key={contact._id}>
+                <td className='thead'>{contact.category} </td>
+                <td
+                  className='thead'
+                  dangerouslySetInnerHTML={{ __html: contact.disease}}
+                />
+                <td 
+                className='thead'
+                dangerouslySetInnerHTML={{ __html: contact.description }}
+                />
+                <td className='thead'> {contact.location}</td>
+                <td className='thead'>
+                  <ul>
+                    {contact.solutions.map((sol, index) => (
+                      <li key={index}>{sol.solution}</li>
+                    ))}
+                  </ul>
+                </td>
 
 
-                  <td>
-                    <MdEdit className="SeditIcon" onClick={() => handleEdit(contact._id)} />
-                    <MdDeleteOutline className="SdeleteIcon" onClick={() => handleDelete(contact._id)} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+                <td>
+                  <MdEdit className="SeditIcon" onClick={() => handleEdit(contact._id)} />
+                  <MdDeleteOutline className="SdeleteIcon" onClick={() => handleDelete(contact._id)} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+
           </table>
         </div>
 
