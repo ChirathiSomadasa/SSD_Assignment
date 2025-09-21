@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const passportStrategy = require("./passport");
 const cookieSession = require("cookie-session");
+const { body, validationResult } = require('express-validator');
 
 
 // Routes
@@ -19,7 +20,7 @@ const notificationRoute = require("./routes/map/notification_route");
 const detailsRoutes = require("./routes/router");
 
 // Models
-const ContactModel = require("./models/contact");
+const ContactModel = require('./models/contact');
 
 const app = express();
 
@@ -104,6 +105,160 @@ app.use("/notification", notificationRoute);
 app.use("/details", detailsRoutes);
 
 
+// Fetch all contacts
+app.get('/', async (req, res) => {
+    try {
+        const contacts = await ContactModel.find({});
+        res.status(200).json(contacts);
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching problems' });
+    }
+});
+
+// Validation rules
+const validateProblem = [
+  // Use .isString() first to reject any non-string input (like objects, arrays, etc.)
+  body('disease').isString().withMessage('Disease must be a text string.') // <- THIS IS THE KEY
+                 .notEmpty().withMessage('Disease name is required.')
+                 .trim()
+                 .escape(),
+
+  body('description').isString().withMessage('Description must be text.')
+                    .notEmpty().withMessage('Description is required.')
+                    .trim()
+                    .escape(),
+  body('category').isString().withMessage('Category must be text.')
+                 .notEmpty().withMessage('Category is required.')
+                 .trim()
+                 .escape(),
+  body('location').optional().isString().withMessage('Location must be text.').trim().escape()
+];
+
+// Add a problem
+app.post("/AddProblem",validateProblem, async (req, res) => {
+    // Check for validation errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  // Proceed with sanitized data in req.body
+  try {
+    const { disease, description, category, location } = req.body; 
+    const newProblem = new ContactModel({ disease, description, category, location });
+    await newProblem.save();
+    res.status(200).json({ message: 'Problem added successfully!', data: newProblem });
+  } catch (err) {
+    res.status(500).json({ error: 'Error adding problem' });
+  }
+});
+// Add a problem (FIXED CODE)
+// app.post("/AddProblem", validateProblem, async (req, res) => {
+//   // 1. Check for validation errors from the validateProblem middleware
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return res.status(400).json({ errors: errors.array() }); // Send detailed error messages
+//   }
+
+//   try {
+//     // Destructure the sanitized fields from req.body
+//     const { disease, description, category, location } = req.body;
+
+//     // 3. Create a new problem using the sanitized data
+//     const newProblem = new ContactModel({
+//       disease,
+//       description,
+//       category,
+//       location
+//     });
+
+//     await newProblem.save();
+//     res.status(200).json({ message: 'Problem added successfully!', data: newProblem });
+//   } catch (err) {
+//     res.status(500).json({ error: 'Error adding problem' });
+//   }
+// });
+
+const validateProblemUpdate = [
+  body('disease').optional().isString().trim().escape(),
+  body('description').optional().isString().trim().escape(),
+  body('category').optional().isString().trim().escape(),
+  body('location').optional().isString().trim().escape()
+];
+// const validateProblemUpdate = [
+//   body('disease').optional().trim().escape(), // Use optional(), not notEmpty()
+//   body('description').optional().trim().escape(),
+//   body('category').optional().trim().escape(),
+//   body('location').optional().trim().escape()
+// ];
+
+// Update a problem
+app.put("/UpdateContact/:id",validateProblemUpdate, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const updatedProblem = await ContactModel.findByIdAndUpdate(id, req.body, { new: true });
+        res.status(200).json(updatedProblem);
+    } catch (err) {
+        res.status(500).json({ error: 'Error updating problem' });
+    }
+});
+
+// Delete a problem
+app.delete("/deleteContact/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        await ContactModel.findByIdAndDelete(id);
+        res.status(200).json({ message: 'Problem deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Error deleting problem' });
+    }
+});
+
+// Fetch a single problem by ID
+app.get('/getContact/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const contact = await ContactModel.findById(id);
+        res.status(200).json(contact);
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching problem' });
+    }
+});
+
+const validateSolution = [
+  body('solution').notEmpty().trim().escape().withMessage('Solution text is required') 
+];
+
+
+// Add a solution to a problem
+app.put('/addSolution/:id',validateSolution, async (req, res) => {
+    const { id } = req.params;
+    const { solution } = req.body;
+
+    try {
+        const contact = await ContactModel.findById(id);
+        if (!contact) {
+            return res.status(404).json({ error: 'Problem not found' });
+        }
+
+        contact.solutions.push({ solution });
+        await contact.save();
+        res.status(200).json({ message: 'Solution added successfully', data: contact });
+    } catch (err) {
+        res.status(500).json({ error: 'Error adding solution. Please try again.' });
+    }
+});
+
+// Fetch solutions for a problem
+app.get('/getSolution/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const contact = await ContactModel.findById(id).populate('solutions');
+        res.status(200).json(contact);
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching problem' });
+    }
+});
 /*const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
