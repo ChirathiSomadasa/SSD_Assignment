@@ -5,7 +5,6 @@ import axios from 'axios';
 import { MdDeleteOutline, MdEdit } from "react-icons/md";
 //import { useAuthEmail, useAuthPassword } from '../../auth'
 import { useNavigate } from 'react-router-dom';
-import DOMPurify from 'dompurify';
 
 
 function ManageDisease() {
@@ -76,67 +75,61 @@ function ManageDisease() {
     return null;*/
 
 
+  
+    return (
+      <div>
+        <div class="SStoreSearch">
+          <input type="text" class="SSearch" onClick={handleSearch} value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}  // Update search query state
+            onKeyPress={handleKeyPress}  // Listen for "Enter" key press
+            placeholder="Search by category..." />
+        </div>
 
-  return (
-    <div>
-      <div class="SStoreSearch">
-        <input type="text" class="SSearch" onClick={handleSearch} value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}  // Update search query state
-          onKeyPress={handleKeyPress}  // Listen for "Enter" key press
-          placeholder="Search by category..." />
-      </div>
-
-      <div class="SContactStoreP">
-        <br></br><br></br>
-        <h2>Manage Diseases Results</h2>
-        <table className="SContactTableP">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Disease</th>
-              <th>Symptoms</th>
-              <th>Location</th>
-              <th>Solutions</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contactData.map((contact) => (
-              <tr key={contact._id}>
-                <td className='thead'>{contact.category} </td>
-                <td
-                  className='thead'
-                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contact.disease) }}
-                />
-                <td 
-                className='thead'
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contact.description) }}
-                />
-                <td className='thead'> {contact.location}</td>
-                <td className='thead'>
-                  <ul>
-                    {contact.solutions.map((sol, index) => (
-                      <li key={index}>{sol.solution}</li>
-                    ))}
-                  </ul>
-                </td>
-
-
-                <td>
-                  <MdEdit className="SeditIcon" onClick={() => handleEdit(contact._id)} />
-                  <MdDeleteOutline className="SdeleteIcon" onClick={() => handleDelete(contact._id)} />
-                </td>
+        <div class="SContactStore">
+          <br></br><br></br>
+          <h2>Manage Diseases Results</h2>
+          <table className="SContactTable">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Disease</th>
+                <th>Symptoms</th>
+                <th>Location</th>
+                <th>Solutions</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {contactData.map((contact) => (
+                <tr key={contact._id}>
+                  <td className='thead'>{contact.category} </td>
+                  <td className='thead'>{contact.disease}</td>
+                  <td className='thead'>{contact.description}</td>
+                  <td className='thead'> {contact.location}</td>
+                  <td className='thead'>
+                    <ul>
+                      {contact.solutions.map((sol, index) => (
+                        <li key={index}>{sol.solution}</li>
+                      ))}
+                    </ul>
+                  </td>
+
+
+                  <td>
+                    <MdEdit className="SeditIcon" onClick={() => handleEdit(contact._id)} />
+                    <MdDeleteOutline className="SdeleteIcon" onClick={() => handleDelete(contact._id)} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
       </div>
 
-    </div>
 
-
-  );
-
+    );
+  
 }
 
 export default ManageDisease;

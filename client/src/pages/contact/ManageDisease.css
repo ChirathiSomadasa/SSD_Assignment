@@ -23,12 +23,9 @@
 
 }
 
-
-.SContactTableP{
-  width: 100%;
-  padding: 20px;
- 
-}
+h2{
+  text-align: center !important;
+} 
 
 .Qwelcome {
 
@@ -59,12 +56,9 @@
 .SStoreSearch{
     float: left !important;
     margin-top: 40px !important;
-    margin-left: 1150px !important;
+    margin-left: 950px !important;
+    margin-right: 50px !important;
 } 
-
-h2{
-  text-align: center;
-}
 
 .SSearch{
     padding: 10px !important;
@@ -76,6 +70,8 @@ h2{
     background-color: #77777744 !important;
     padding-bottom: 10px !important;
 }
+ 
+
  
 
  

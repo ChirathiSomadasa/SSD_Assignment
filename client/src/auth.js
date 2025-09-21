@@ -16,10 +16,5 @@ function useIsAuthenticated() {
     return !!localStorage.getItem('token');
 }
 
-function useAuthPassword() {
-    const [cookies] = useCookies(['auth_password']);
-    return cookies.auth_password || null;
-}
-
-export { useAuthEmail, useAuthToken, useIsAuthenticated, useAuthPassword };
+export { useAuthEmail, useAuthToken, useIsAuthenticated };
 
