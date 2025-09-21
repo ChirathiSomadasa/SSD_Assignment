@@ -1,8 +1,7 @@
 // routes/prediction_route.js
-
 const express = require("express");
 const router = express.Router();
-const Prediction = require("../models/Prediction"); // Make sure this is the correct path
+const Prediction = require("../models/Prediction"); 
 const User = require("../models/User");
 
 // Middleware to verify authentication
