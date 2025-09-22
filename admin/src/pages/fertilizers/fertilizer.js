@@ -19,7 +19,7 @@ function Fertilizer() {
     // Fetch details from the server
     const fetchDetails = async () => {
         try {
-            const response = await axios.get("http://localhost:5001/getdetails");
+            const response = await axios.get("http://localhost:5001/details/getdetails");
             setDetails(response.data.data); // Access the 'data' field in the response
             setFilteredDetails(response.data.data);
         } catch (error) {
