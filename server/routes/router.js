@@ -118,7 +118,7 @@ router.get('/details/:id',requireAuth, async (req, res) => {
 router.get('/getdetails', requireAuth, async (req, res) => {
   try {
     const userId = req.current_user.userId;
-    const userRole = req.current_user.role;
+    const userRole = req.current_user.userType;
 
     // Base query: normal users see only their own details
     let query = {};

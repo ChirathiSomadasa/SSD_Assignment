@@ -6,7 +6,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import Logo from '../../images/logo.png'; 
 import './viewAll.css';
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = pdfFonts.vfs;
 
 function ViewAll() {
     const navigate = useNavigate();

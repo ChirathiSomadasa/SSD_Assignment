@@ -15,7 +15,7 @@ function Contact() {
 
     useEffect(() => {
 
-        axios.get('http://localhost:5001/')
+        axios.get('http://localhost:5001/contact/api')
           .then(result => setContactData(result.data))
           .catch(err => console.log(err))
       }, []);

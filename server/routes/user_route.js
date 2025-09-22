@@ -4,6 +4,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
+const mongoose = require("mongoose");
 
 const router = express.Router();
 
@@ -158,6 +159,27 @@ router.get("/api/admin/register", async (req, res) => {
         res.status(200).json({ message: "Users retrieved", status: "success", users });
     } catch (error) {
         res.status(500).json({ message: "Error", status: "error", error: error.message });
+    }
+});
+
+// Admin: Remove User
+router.delete("/api/admin/user/:id", async (req, res) => {
+    if (!req.current_user || req.current_user.user?.user_type !== "admin") {
+        return res.status(403).json({ status: "error", message: "Access denied." });
+    }
+    try {
+        const userId = req.params.id;
+        // Validate ObjectId to prevent NoSQL injection
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ status: "error", message: "Invalid user ID." });
+        }
+        const deletedUser = await User.findByIdAndDelete(userId);
+        if (!deletedUser) {
+            return res.status(404).json({ status: "error", message: "User not found." });
+        }
+        res.json({ status: "success", message: "User removed successfully." });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: "Error removing user.", error: error.message });
     }
 });
 

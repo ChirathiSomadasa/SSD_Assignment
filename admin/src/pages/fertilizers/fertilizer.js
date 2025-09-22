@@ -7,7 +7,7 @@ import Logo from '../../images/logo.png';
 import './fertilizer.css';
 
 // Register fonts with pdfmake
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = pdfFonts.vfs;
 
 function Fertilizer() {
     const navigate = useNavigate();
@@ -19,7 +19,13 @@ function Fertilizer() {
     // Fetch details from the server
     const fetchDetails = async () => {
         try {
-            const response = await axios.get("http://localhost:5001/getdetails");
+            // const response = await axios.get("http://localhost:5001/details/getdetails");
+            const token = localStorage.getItem('token'); // or wherever you store it
+            const response = await axios.get("http://localhost:5001/details/getdetails", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            });            
             setDetails(response.data.data); // Access the 'data' field in the response
             setFilteredDetails(response.data.data);
         } catch (error) {
@@ -120,83 +126,109 @@ function Fertilizer() {
     };
 
   // Function to load image and convert it to Data URL
-const loadImage = (src) => {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.crossOrigin = 'Anonymous'; // Enable CORS if needed
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            resolve(canvas.toDataURL('image/png')); // Convert to Data URL
-        };
-        img.onerror = (err) => reject(err);
-    });
-};
+    const loadImage = (src) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.crossOrigin = 'Anonymous'; // Enable CORS if needed
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataURL('image/png')); // Convert to Data URL
+            };
+            img.onerror = (err) => reject(err);
+        });
+    };
 
-const handleApprove = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to approve this detail?");
-    if (!confirmed) return; // Exit if the user clicks "Cancel"
+    const handleApprove = async (id) => {
+        const confirmed = window.confirm("Are you sure you want to approve this detail?");
+        if (!confirmed) return; // Exit if the user clicks "Cancel"
 
-    try {
-        const response = await axios.put(`http://localhost:5001/details/${id}/approve`);
-        const updatedDetails = details.map(detail => detail._id === id ? response.data.data : detail);
-        setDetails(updatedDetails);
-        setFilteredDetails(updatedDetails);
-        alert("Detail approved successfully!"); // Show success message
-    } catch (error) {
-        console.error("Error approving detail:", error);
-        alert("An error occurred while approving the detail."); // Show error message
-    }
-};
+        try {
+            // const response = await axios.put(`http://localhost:5001/details/${id}/approve`);
+            const token = localStorage.getItem('token');
+            const response = await axios.put(
+                `http://localhost:5001/details/${id}/approve`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );        
+            const updatedDetails = details.map(detail => detail._id === id ? response.data.data : detail);
+            setDetails(updatedDetails);
+            setFilteredDetails(updatedDetails);
+            alert("Detail approved successfully!"); // Show success message
+        } catch (error) {
+            console.error("Error approving detail:", error);
+            alert("An error occurred while approving the detail."); // Show error message
+        }
+    };
 
-const handleReject = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to reject this detail?");
-    if (!confirmed) return; // Exit if the user clicks "Cancel"
+    const handleReject = async (id) => {
+        const confirmed = window.confirm("Are you sure you want to reject this detail?");
+        if (!confirmed) return; // Exit if the user clicks "Cancel"
 
-    try {
-        const response = await axios.put(`http://localhost:5001/details/${id}/reject`);
-        const updatedDetails = details.map(detail => detail._id === id ? response.data.data : detail);
-        setDetails(updatedDetails);
-        setFilteredDetails(updatedDetails);
-        alert("Detail rejected successfully!"); // Show success message
-    } catch (error) {
-        console.error("Error rejecting detail:", error);
-        alert("An error occurred while rejecting the detail."); // Show error message
-    }
-};
+        try {
+            // const response = await axios.put(`http://localhost:5001/details/${id}/reject`);
+            const token = localStorage.getItem('token');
+            const response = await axios.put(
+                `http://localhost:5001/details/${id}/reject`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );        
+            const updatedDetails = details.map(detail => detail._id === id ? response.data.data : detail);
+            setDetails(updatedDetails);
+            setFilteredDetails(updatedDetails);
+            alert("Detail rejected successfully!"); // Show success message
+        } catch (error) {
+            console.error("Error rejecting detail:", error);
+            alert("An error occurred while rejecting the detail."); // Show error message
+        }
+    };
 
 
 
     return (
-        <div className="view-all">
-           
-            
-            <input
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="search-inputadmin"/>
-            
-            <button
-                type="button"
-                className="search-buttonadmin"
-                onClick={() => setSearchTerm(searchTerm)}
-            >
-                Search
-            </button>
-           
-            <button
-                type="button"
-                className="download-button"
-                onClick={handleDownloadReport}
-            >
-                Download Report
-            </button>
+    <div className="view-all">
+            <div className="search-report-bar">
+                <input
+                    type="text"
+                    placeholder="Search receiver"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="search-inputadmin"
+                />
+                <button
+                    type="button"
+                    className="search-buttonadmin"
+                    onClick={() => setSearchTerm(searchTerm)}
+                >
+                    Search
+                </button>
+                <button
+                    type="button"
+                    className="clear-search-button"
+                    onClick={() => setSearchTerm('')}
+                >
+                    Clear Search
+                </button>
+                <button
+                    type="button"
+                    className="download-button"
+                    onClick={handleDownloadReport}
+                >
+                    Generate Report
+                </button>
+            </div>
 
             <h1 className="topic">Manage Refill-Request User Details</h1>
 
@@ -229,8 +261,8 @@ const handleReject = async (id) => {
                             <td>{detail.price}</td>
                             <td>{detail.status}</td>
                             <td>
-                                <button className="action-button1 reject" onClick={() => handleReject(detail._id)}>reject</button>
                                 <button className="action-button1 approve" onClick={() => handleApprove(detail._id)} >Approve</button>
+                                <button className="action-button2 reject" onClick={() => handleReject(detail._id)}>Reject</button>
                             </td>
                         </tr>
                     ))}

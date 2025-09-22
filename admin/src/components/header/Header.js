@@ -32,6 +32,7 @@ function Header() {
     removeCookie("admin_token", { path: "/" });
     // Clear localStorage if you stored it there too
     localStorage.removeItem("token");
+    localStorage.clear();
     // Redirect to login page
     window.location.href = "http://localhost:3000/login";
   }

@@ -15,7 +15,7 @@ function Login() {
     const onFinishLogin = (values) => {
         setLoading(true);
 
-        axios.post('http://localhost:5001/login', values)
+        axios.post('http://localhost:5001/login', values, { withCredentials: true })
             .then((response) => {
                 setLoading(false);
                 const data = response.data;
@@ -30,7 +30,7 @@ function Login() {
                         setCookies('admin_token', data.token, { path: '/' });
 
                         // Redirect admin to admin panel (port 3001)
-                        window.location.href = 'http://localhost:3001/';
+                        window.location.href = `http://localhost:3001/?token=${data.token}`;
                     } else {
                         // Normal user navigate to home
                         navigate('/');

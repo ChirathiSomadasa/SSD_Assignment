@@ -10,6 +10,7 @@ function SignOut() {
     useEffect(() => {
         // Clear JWT and email
         localStorage.removeItem('token');
+        localStorage.clear();
         setCookies('auth_email', '', { expires: new Date(0) });
         navigate('/login');
     }, [navigate, setCookies]);

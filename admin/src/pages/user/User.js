@@ -2,21 +2,30 @@ import React, { useEffect, useState } from 'react';
 import './User.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 function User() {
     const [user, setUsers] = useState([]);
     const [filteredUserData, setFilteredUserData] = useState([]);
     const [searchTerm, setSearchTerm] = useState(''); // State to store the search input
     const navigate = useNavigate();
+    const [cookies] = useCookies(['admin_token']); // Use cookies hook
+    const adminToken = cookies.admin_token; // Get admin_token from cookies
 
     useEffect(() => {
-        axios.get("http://localhost:5001/user/api/admin/register")
+        if (!adminToken) return;
+
+        axios.get("http://localhost:5001/api/admin/register", {
+            headers: {
+                Authorization: `Bearer ${adminToken}`
+            }
+        })
             .then((response) => {
-                console.log(response);  // Log the response to check its structure
-                const { status, data } = response.data;
+                // console.log(response);
+                const { status, users } = response.data;
                 if (status === "success") {
-                    setUsers(data);  // Store fetched data
-                    setFilteredUserData(data); // Initialize filtered data with all users
+                    setUsers(users);
+                    setFilteredUserData(users);
                 } else {
                     alert("Error - " + response.data.message);
                 }
@@ -24,29 +33,49 @@ function User() {
             .catch((error) => {
                 alert("Error fetching users: " + error.message);
             });
-    }, [navigate]);
+    }, [navigate, adminToken]);
 
-    // Function to handle search
-    const handleSearch = (event) => {
-        const value = event.target.value.toLowerCase();
-        setSearchTerm(value);
 
-        // Filter user data based on the search term across multiple fields
+    // Filter users as you type
+    useEffect(() => {
+        const value = searchTerm.toLowerCase();
         const filteredData = user.filter((user) =>
-            user.first_name.toLowerCase().includes(value) ||
-            user.last_name.toLowerCase().includes(value) ||
-            user.mobile_number.toLowerCase().includes(value) ||
-            user.email.toLowerCase().includes(value) ||
-            user.city.toLowerCase().includes(value)
+            (user.first_name?.toLowerCase() || '').includes(value) ||
+            (user.last_name?.toLowerCase() || '').includes(value) ||
+            (user.mobile_number?.toLowerCase() || '').includes(value) ||
+            (user.email?.toLowerCase() || '').includes(value) ||
+            (user.city?.toLowerCase() || '').includes(value)
         );
         setFilteredUserData(filteredData);
+    }, [searchTerm, user]);
+
+
+    // Remove user function
+    const handleRemoveUser = (userId) => {
+        if (!window.confirm("Are you sure you want to remove this user?")) return;
+        axios.delete(`http://localhost:5001/api/admin/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${adminToken}`
+            }
+        })
+            .then((response) => {
+                if (response.data.status === "success") {
+                    setUsers(prev => prev.filter(u => u._id !== userId));
+                } else {
+                    alert("Error - " + response.data.message);
+                }
+            })
+            .catch((error) => {
+                alert("Error removing user: " + error.message);
+            });
     };
 
-    // Function to clear search
+
+    // Clear search
     const clearSearch = () => {
         setSearchTerm('');
-        setFilteredUserData(user); // Reset the filtered data to all users
     };
+
 
     return (
         <div className="user-list-container">
@@ -56,10 +85,9 @@ function User() {
                     className='user-filter-search'
                     placeholder="Search user"
                     type="text"
-                    value={searchTerm} // Controlled input
-                    onChange={handleSearch} // Call the search function on change
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
                 />
-                <button className='user-filter-search-btn' onClick={handleSearch}>Search</button>
                 <button className='user-filter-search-btn' onClick={clearSearch}>Clear Search</button>
             </div>
 
@@ -71,22 +99,31 @@ function User() {
                         <th>Contact Number</th>
                         <th>Email</th>
                         <th>City</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {filteredUserData.length > 0 ? (
                         filteredUserData.map((user, index) => (
-                            <tr key={index}>
+                            <tr key={user._id || index}>
                                 <td>{user.first_name}</td>
                                 <td>{user.last_name}</td>
                                 <td>{user.mobile_number}</td>
                                 <td>{user.email}</td>
                                 <td>{user.city}</td>
+                                <td>
+                                    <button
+                                        className="user-remove-btn"
+                                        onClick={() => handleRemoveUser(user._id)}
+                                    >
+                                        Remove
+                                    </button>
+                                </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="5">No users found</td>
+                            <td colSpan="6">No users found</td>
                         </tr>
                     )}
                 </tbody>

@@ -78,7 +78,11 @@ function Map() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/disease_loc'); // Adjust the API endpoint if needed
+        const token = localStorage.getItem("token");
+        const response = await axios.get('http://localhost:5001/api/disease_loc', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
         const fetchedLocations = response.data;
 
         // Convert each location name to coordinates
@@ -93,8 +97,9 @@ function Map() {
 
         // Filter out any locations that couldn't be geocoded
         setLocations(locationsWithCoordinates.filter(loc => loc !== null));
-        console.log('Fetched and geocoded locations:', locationsWithCoordinates);
+        // alert("Disease locations fetched successfully!");
       } catch (err) {
+        alert("Error fetching disease locations. Please try again.");
         console.error('Error fetching disease locations:', err);
       }
     };
