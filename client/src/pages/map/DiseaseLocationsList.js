@@ -12,7 +12,10 @@ const DiseaseLocationsList = () => {
     useEffect(() => {
         const fetchLocations = async () => {
         try {
-            const response = await axios.get('http://localhost:5001/api/disease_locations'); // Adjust the API endpoint if needed
+            const token = localStorage.getItem("token");
+            const response = await axios.get('http://localhost:5001/api/disease_locations', {
+              headers: { Authorization: `Bearer ${token}` }
+            });
 
             setLocations(response.data);  // Store fetched locations
             setLoading(false);

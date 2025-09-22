@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/header/Header';
+import AdminDashboard from './pages/AdminDashboard';
 import Prediction from './pages/prediction/Prediction';
 import Fertilizer from './pages/fertilizers/fertilizer';
 import Contact from './pages/contact/Contact';
@@ -24,6 +25,7 @@ function App() {
 
       <div className='main'>
         <Routes>
+        <Route path="/" Component={AdminDashboard} />
         <Route path="/prediction" Component={Prediction} />
         <Route path="/fertilizers" Component={Fertilizer} />
         <Route path="/contact/Contact" Component={Contact}/>

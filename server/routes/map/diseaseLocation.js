@@ -5,11 +5,20 @@ const router = express.Router();
 const DiseaseReport = require("../../models/contact"); // disease location when reporting   //const Contact = require("../models/contact");
 
 
-
+// Middleware to verify authentication
+const authenticate = (req, res, next) => {
+    if (!req.current_user) {
+        return res.status(401).json({
+            status: "error",
+            message: "Authentication required"
+        });
+    }
+    next();
+};
 
 
 // // get disease location from DB
-router.get('/disease_locations', async (req, res) => {
+router.get('/disease_locations', authenticate, async (req, res) => {
   try {
     const diseaseReports = await DiseaseReport.find({});
     // console.log('Disease Reports:', diseaseReports);
@@ -22,14 +31,12 @@ router.get('/disease_locations', async (req, res) => {
       // intensity: report.dangerLevel, // Assuming dangerLevel is a field in DiseaseReport
     }));
     res.json(locations);
-    console.log('successfully fetching locationssssss',locations);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetchinggggg disease locations' });
-    console.error('Error fetching locationsssss:', err);
+    res.status(500).json({ message: 'Error fetching disease locations' });
   }
 });
 
-router.get('/disease_loc', async (req, res) => {
+router.get('/disease_loc', authenticate, async (req, res) => {
   try {
     const disease_Reports = await DiseaseReport.find({});
     // console.log('Disease Reports:', diseaseReports);
@@ -42,10 +49,8 @@ router.get('/disease_loc', async (req, res) => {
       // intensity: report.dangerLevel, // Assuming dangerLevel is a field in DiseaseReport
     }));
     res.json(locations);
-    console.log('successfully fetching locationssssss',locations);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetchinggggg disease locations' });
-    console.error('Error fetching locationsssss:', err);
+    res.status(500).json({ message: 'Error fetching disease locations' });
   }
 });
 

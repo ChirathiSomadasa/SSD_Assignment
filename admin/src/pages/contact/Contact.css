@@ -96,4 +96,45 @@
 }
 
 
- 
+ .disease-table td button {
+    padding: 7px 18px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    margin-bottom: 4px;
+    margin-right: 4px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.disease-table td button:first-child {
+    background: #000000;
+    color: #fff;
+    border: 1px solid #1976d2;
+}
+
+.disease-table td button:first-child:hover {
+    background: #125ea2;
+    border-color: #125ea2;
+}
+
+.disease-table td button:last-child {
+    background: #ffd0d0;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+}
+
+.disease-table td button:last-child:hover {
+    background: #ffeaea;
+    color: #b71c1c;
+    border-color: #b71c1c;
+}
+
+.disease-table td {
+    vertical-align: middle;
+}
+
+.disease-table th, .disease-table td {
+    text-align: center;
+}

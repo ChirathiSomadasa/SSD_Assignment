@@ -1,0 +1,12 @@
+.admin-dashboard {
+  padding: 40px;
+  text-align: center;
+}
+.admin-dashboard h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+.admin-dashboard p {
+  font-size: 1.2rem;
+  color: #555;
+}

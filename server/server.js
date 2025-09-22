@@ -42,7 +42,7 @@ app.use(passport.session());
 
 // Middleware
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:3001"],
     credentials: true
 }));
 
@@ -105,6 +105,8 @@ app.use("/api", diseaseLocationRoutes);
 app.use("/api_loc", locationNotificationRoutes);
 app.use("/notification", notificationRoute);
 app.use("/details", detailsRoutes);
+app.use("/contact", contactRoute);
+
 
 // Fetch all contacts
 app.get('/', async (req, res) => {
@@ -230,6 +232,7 @@ app.get('/getSolution/:id', async (req, res) => {
         res.status(500).json({ error: 'Error fetching problem' });
     }
 });
+
 
 
 /*const express = require("express");

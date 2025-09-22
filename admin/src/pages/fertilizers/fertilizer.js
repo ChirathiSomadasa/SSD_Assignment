@@ -7,7 +7,7 @@ import Logo from '../../images/logo.png';
 import './fertilizer.css';
 
 // Register fonts with pdfmake
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = pdfFonts.vfs;
 
 function Fertilizer() {
     const navigate = useNavigate();
@@ -172,31 +172,37 @@ const handleReject = async (id) => {
 
 
     return (
-        <div className="view-all">
-           
-            
-            <input
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="search-inputadmin"/>
-            
-            <button
-                type="button"
-                className="search-buttonadmin"
-                onClick={() => setSearchTerm(searchTerm)}
-            >
-                Search
-            </button>
-           
-            <button
-                type="button"
-                className="download-button"
-                onClick={handleDownloadReport}
-            >
-                Download Report
-            </button>
+    <div className="view-all">
+            <div className="search-report-bar">
+                <input
+                    type="text"
+                    placeholder="Search receiver"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="search-inputadmin"
+                />
+                <button
+                    type="button"
+                    className="search-buttonadmin"
+                    onClick={() => setSearchTerm(searchTerm)}
+                >
+                    Search
+                </button>
+                <button
+                    type="button"
+                    className="clear-search-button"
+                    onClick={() => setSearchTerm('')}
+                >
+                    Clear Search
+                </button>
+                <button
+                    type="button"
+                    className="download-button"
+                    onClick={handleDownloadReport}
+                >
+                    Generate Report
+                </button>
+            </div>
 
             <h1 className="topic">Manage Refill-Request User Details</h1>
 
@@ -229,8 +235,8 @@ const handleReject = async (id) => {
                             <td>{detail.price}</td>
                             <td>{detail.status}</td>
                             <td>
-                                <button className="action-button1 reject" onClick={() => handleReject(detail._id)}>reject</button>
                                 <button className="action-button1 approve" onClick={() => handleApprove(detail._id)} >Approve</button>
+                                <button className="action-button2 reject" onClick={() => handleReject(detail._id)}>Reject</button>
                             </td>
                         </tr>
                     ))}

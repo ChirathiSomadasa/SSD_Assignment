@@ -7,101 +7,145 @@
     overflow: hidden;
   }
   
-    .topic {
-      background-color: #fefefe9e;
-      color: black;
-      padding: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .search-buttonadmin {
-      padding: 10px;
-      background-color: #027413;
-      color: rgb(255, 255, 255);
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bolder;
-      text-align: center;
-      width: 150px; 
-      margin-right: 600px;
-     
-  }
-  .search-inputadmin{
-    padding: 10px;
-    border: 2px solid black;;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: bolder;
-    margin-top: 20px;
-    text-align: center;
-    width: 20%;
-    margin-left: 80px;
-  
-  }
-   .download-button {
-    padding: 10px;
-    background-color: #4843b7;
-    color: rgb(255, 255, 255);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
-    text-align: center;
-    width: 20%;
-   margin-right: 80px;
-    
-  }
-  
-   .download-button:hover {
-      background-color: #16015c;
-  }
+.search-report-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ededed;
+  border-radius: 14px;
+  padding: 24px 32px;
+  margin-bottom: 32px;
+  max-width: 98vw;
+  gap: 18px;
+}
 
-  .search-buttonadmin:hover {
-    background-color: #01480e;
+.search-inputadmin {
+  flex: 1 1 220px;
+  min-width: 180px;
+  margin: 0;
+  margin-right: 8px;
+  padding: 12px;
+  border: 1.5px solid #bbb;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.search-buttonadmin,
+.clear-search-button,
+.download-button {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 0 4px;
+  background: #333;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.search-buttonadmin:hover {
+  background: #027413;
+}
+.clear-search-button:hover {
+  background: #b71c1c;
+}
+.download-button {
+  background: #333;
+}
+.download-button:hover {
+  background: #4843b7;
+}
+
+@media (max-width: 900px) {
+  .search-report-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px 8px;
+  }
+  .search-inputadmin {
+    margin-bottom: 0;
+  }
 }
     
-    .detail-tableadmin {
-      width: 100%;
-      margin: 0 auto;
-      border-collapse: collapse;
-      background: #f9f9f9bd;
-     
-    }
-    
-    .detail-tableadimn th, .detail-tableadimn td {
-      border: 1px solid #656565;
-      padding: 8px;
-      text-align: center;
-      padding: 12px;
-      width: 10%;
-      
-    }
-    
-    .detail-tableadmin th {
-      background-color: #c0c3c0;
-      
-  
-    }
-    
-    .action-button1 {
-      padding: 10px 1px;
-      margin: 3px 3px;
-      border: none;
-      cursor: pointer;
-      color: white;
-      width: 100%;
-      font-size: 16px;
-    }
-    
-    
-    .reject {
-      background-color: red;
-     
-    }
-    
-    .approve {
-      background-color: green;
-    }
+.detail-tableadmin {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: #f9f9f9bd;
+  font-size: 15px;
+  table-layout: auto;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+
+.detail-tableadmin th, .detail-tableadmin td {
+  border: 1px solid #656565;
+  padding: 8px 6px;
+  text-align: center;
+  min-width: 110px;
+  max-width: 220px;
+  word-break: break-word;
+  vertical-align: middle;
+}
+
+.detail-tableadmin th {
+  background-color: #c0c3c0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.detail-tableadmin tbody tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+.detail-tableadmin tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.action-button1, .action-button2 {
+  padding: 6px;
+  margin: 2px 0;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.action-button1 {
+  color: white;
+  background-color: rgb(0, 0, 0);
+}
+
+.action-button1.approve:hover {
+  background-color: rgb(0, 128, 0);
+}
+
+.action-button2 {
+  color: rgb(255, 10, 10);
+  background-color: rgb(254, 217, 217);
+}
+
+.action-button2.reject:hover {
+  background-color: rgb(252, 170, 170);
+}
+
+/* Responsive: horizontal scroll for small screens */
+@media (max-width: 1100px) {
+  .detail-tableadmin, .detail-tableadmin thead, .detail-tableadmin tbody, .detail-tableadmin th, .detail-tableadmin td, .detail-tableadmin tr {
+    display: block;
+  }
+  .detail-tableadmin {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .detail-tableadmin th, .detail-tableadmin td {
+    min-width: 120px;
+    max-width: 250px;
+  }
+}
