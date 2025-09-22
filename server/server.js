@@ -20,6 +20,7 @@ const diseaseLocationRoutes = require("./routes/map/diseaseLocation");
 const locationNotificationRoutes = require("./routes/map/notification");
 const notificationRoute = require("./routes/map/notification_route");
 const detailsRoutes = require("./routes/router");
+const contactRoute = require("./routes/contact_route");
 
 // Models
 const ContactModel = require('./models/contact');

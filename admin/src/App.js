@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/header/Header';
 import AdminDashboard from './pages/AdminDashboard';
 import Prediction from './pages/prediction/Prediction';
@@ -10,7 +10,24 @@ import User from './pages/user/User';
 import { useIsAdmin } from './auth';
 
 function App() {
-    const isAdmin = useIsAdmin();
+  const [tokenChecked, setTokenChecked] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("token", token);
+      window.history.replaceState({}, document.title, "/");
+    }
+    setTokenChecked(true); // Mark that we've checked/stored the token
+  }, []);
+
+  const isAdmin = useIsAdmin();
+
+  if (!tokenChecked) {
+    // Wait until token is processed
+    return null;
+  }
 
   if (!isAdmin) {
     return (
@@ -19,20 +36,19 @@ function App() {
       </div>
     );
   }
+
   return (
     <BrowserRouter>
       <Header />
-
       <div className='main'>
         <Routes>
-        <Route path="/" Component={AdminDashboard} />
-        <Route path="/prediction" Component={Prediction} />
-        <Route path="/fertilizers" Component={Fertilizer} />
-        <Route path="/contact/Contact" Component={Contact}/>
-        <Route path="/contact/Solution" Component={Solution}/>
-        <Route path="/user" Component={User} />
+          <Route path="/" element={<AdminDashboard />} />
+          <Route path="/prediction" element={<Prediction />} />
+          <Route path="/fertilizers" element={<Fertilizer />} />
+          <Route path="/contact/Contact" element={<Contact />} />
+          <Route path="/contact/Solution" element={<Solution />} />
+          <Route path="/user" element={<User />} />
         </Routes>
-
       </div>
     </BrowserRouter>
   );

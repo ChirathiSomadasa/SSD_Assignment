@@ -19,7 +19,13 @@ function Fertilizer() {
     // Fetch details from the server
     const fetchDetails = async () => {
         try {
-            const response = await axios.get("http://localhost:5001/details/getdetails");
+            // const response = await axios.get("http://localhost:5001/details/getdetails");
+            const token = localStorage.getItem('token'); // or wherever you store it
+            const response = await axios.get("http://localhost:5001/details/getdetails", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            });            
             setDetails(response.data.data); // Access the 'data' field in the response
             setFilteredDetails(response.data.data);
         } catch (error) {
@@ -120,54 +126,74 @@ function Fertilizer() {
     };
 
   // Function to load image and convert it to Data URL
-const loadImage = (src) => {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.crossOrigin = 'Anonymous'; // Enable CORS if needed
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            resolve(canvas.toDataURL('image/png')); // Convert to Data URL
-        };
-        img.onerror = (err) => reject(err);
-    });
-};
+    const loadImage = (src) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.crossOrigin = 'Anonymous'; // Enable CORS if needed
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataURL('image/png')); // Convert to Data URL
+            };
+            img.onerror = (err) => reject(err);
+        });
+    };
 
-const handleApprove = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to approve this detail?");
-    if (!confirmed) return; // Exit if the user clicks "Cancel"
+    const handleApprove = async (id) => {
+        const confirmed = window.confirm("Are you sure you want to approve this detail?");
+        if (!confirmed) return; // Exit if the user clicks "Cancel"
 
-    try {
-        const response = await axios.put(`http://localhost:5001/details/${id}/approve`);
-        const updatedDetails = details.map(detail => detail._id === id ? response.data.data : detail);
-        setDetails(updatedDetails);
-        setFilteredDetails(updatedDetails);
-        alert("Detail approved successfully!"); // Show success message
-    } catch (error) {
-        console.error("Error approving detail:", error);
-        alert("An error occurred while approving the detail."); // Show error message
-    }
-};
+        try {
+            // const response = await axios.put(`http://localhost:5001/details/${id}/approve`);
+            const token = localStorage.getItem('token');
+            const response = await axios.put(
+                `http://localhost:5001/details/${id}/approve`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );        
+            const updatedDetails = details.map(detail => detail._id === id ? response.data.data : detail);
+            setDetails(updatedDetails);
+            setFilteredDetails(updatedDetails);
+            alert("Detail approved successfully!"); // Show success message
+        } catch (error) {
+            console.error("Error approving detail:", error);
+            alert("An error occurred while approving the detail."); // Show error message
+        }
+    };
 
-const handleReject = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to reject this detail?");
-    if (!confirmed) return; // Exit if the user clicks "Cancel"
+    const handleReject = async (id) => {
+        const confirmed = window.confirm("Are you sure you want to reject this detail?");
+        if (!confirmed) return; // Exit if the user clicks "Cancel"
 
-    try {
-        const response = await axios.put(`http://localhost:5001/details/${id}/reject`);
-        const updatedDetails = details.map(detail => detail._id === id ? response.data.data : detail);
-        setDetails(updatedDetails);
-        setFilteredDetails(updatedDetails);
-        alert("Detail rejected successfully!"); // Show success message
-    } catch (error) {
-        console.error("Error rejecting detail:", error);
-        alert("An error occurred while rejecting the detail."); // Show error message
-    }
-};
+        try {
+            // const response = await axios.put(`http://localhost:5001/details/${id}/reject`);
+            const token = localStorage.getItem('token');
+            const response = await axios.put(
+                `http://localhost:5001/details/${id}/reject`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );        
+            const updatedDetails = details.map(detail => detail._id === id ? response.data.data : detail);
+            setDetails(updatedDetails);
+            setFilteredDetails(updatedDetails);
+            alert("Detail rejected successfully!"); // Show success message
+        } catch (error) {
+            console.error("Error rejecting detail:", error);
+            alert("An error occurred while rejecting the detail."); // Show error message
+        }
+    };
 
 
 
