@@ -19,7 +19,7 @@ function PredictionResult() {
     const [searchQuery, setSearchQuery] = useState('');
     const [search, setSearch] = useState(false); // Track search state
 
-    // 🔒 Redirect if not authenticated
+    // Redirect if not authenticated
     useEffect(() => {
         if (!isAuthenticated) {
             navigate('/login', { replace: true });
@@ -37,7 +37,7 @@ function PredictionResult() {
                     }
                 });
 
-                // ✅ Add status & recommendation (can be moved to backend later)
+                // Add status & recommendation (can be moved to backend later)
                 const predictionsWithStatus = response.data.data.map(item => {
                     let status = '';
                     let recommendation = '';

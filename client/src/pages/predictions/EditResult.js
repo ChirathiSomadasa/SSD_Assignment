@@ -1,8 +1,10 @@
+// src/components/predictions/EditResult.js
 import React, { useState, useEffect } from 'react';
 import './Predictions.css';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import YiledImage from '../../images/yield/yield2.jpg';
+import { useAuthToken, useIsAuthenticated } from '../../auth';
 
 function EditResult() {
     const validRiceVarieties = [
@@ -28,22 +30,44 @@ function EditResult() {
         estimatedYield: '',
         yieldVariability: '',
         geographicLocation: '',
-        historicalData: '',
         irrigationPractices: '',
         weatherConditions: '',
     });
 
     const { id } = useParams();
     const [errors, setErrors] = useState({});
-    const [resultData, setResultData] = useState(null); // State for status and recommendation
+    const [resultData, setResultData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
+    const token = useAuthToken();
+    const isAuthenticated = useIsAuthenticated();
+
+    // Redirect if not authenticated
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate('/login', { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
 
     useEffect(() => {
         const fetchPrediction = async () => {
-            try {
-                const response = await axios.get('http://localhost:5001/prediction/api/predictions/' + id);
+            if (!token || !id) {
+                setError('Authentication required');
+                setLoading(false);
+                return;
+            }
 
-                const item = response.data.data; // single object
+            try {
+                setLoading(true);
+                const response = await axios.get(`http://localhost:5001/prediction/api/predictions/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const item = response.data.data;
 
                 // Calculate status & recommendation
                 let calculatedStatus = '';
@@ -78,21 +102,43 @@ function EditResult() {
                     recommendation: calculatedRecommendation
                 });
 
+                setLoading(false);
             } catch (err) {
                 console.error("Failed to load prediction:", err);
+                
+                // Security: Handle different error scenarios
+                if (err.response) {
+                    switch (err.response.status) {
+                        case 401: // Unauthorized
+                        case 403: // Forbidden
+                            navigate('/login', { replace: true });
+                            return;
+                        case 404: // Not Found
+                            setError('Prediction not found or access denied.');
+                            break;
+                        default:
+                            setError('Failed to load prediction data. Please try again.');
+                    }
+                } else if (err.request) {
+                    setError('Network error. Please check your connection.');
+                } else {
+                    setError('An unexpected error occurred.');
+                }
+                setLoading(false);
             }
         };
 
-        fetchPrediction();
-    }, [id]);
-
+        if (token && isAuthenticated) {
+            fetchPrediction();
+        }
+    }, [id, token, isAuthenticated, navigate]);
 
     const handleYieldChange = (e) => {
         const { name, value } = e.target;
         let errorMsg = '';
 
         if (name === 'variety') {
-            if (!validRiceVarieties.includes(value)) {
+            if (!validRiceVarieties.includes(value.toLowerCase())) {
                 errorMsg = 'Please enter a valid rice variety';
             }
         } else if (name === 'geographicLocation') {
@@ -112,17 +158,23 @@ function EditResult() {
     const handleYieldSubmit = async (e) => {
         e.preventDefault();
 
+        // Security: Revalidate authentication before submission
+        if (!isAuthenticated || !token) {
+            navigate('/login', { replace: true });
+            return;
+        }
+
         const formErrors = {};
-        if (!validRiceVarieties.includes(yieldData.variety)) {
+        if (!validRiceVarieties.includes(yieldData.variety.toLowerCase())) {
             formErrors.variety = 'Please enter a valid rice variety';
         }
         if (!yieldData.geographicLocation.match(/^[a-zA-Z\s]*$/)) {
             formErrors.geographicLocation = 'Please enter only letters';
         }
-        if (!yieldData.estimatedYield.match(/^\d*$/)) {
+        if (!yieldData.estimatedYield.match(/^\d+$/)) {
             formErrors.estimatedYield = 'Please enter a valid integer number';
         }
-        if (!yieldData.yieldVariability.match(/^\d*$/)) {
+        if (!yieldData.yieldVariability.match(/^\d+$/)) {
             formErrors.yieldVariability = 'Please enter a valid integer number';
         }
 
@@ -135,10 +187,13 @@ function EditResult() {
         let calculatedStatus = '';
         let calculatedRecommendation = '';
 
-        if (yieldData.estimatedYield > 3000 && yieldData.yieldVariability < 10) {
+        const estimatedYield = parseInt(yieldData.estimatedYield);
+        const yieldVariability = parseInt(yieldData.yieldVariability);
+
+        if (estimatedYield > 3000 && yieldVariability < 10) {
             calculatedStatus = 'Good';
             calculatedRecommendation = 'Continue with the current practices.';
-        } else if (yieldData.estimatedYield >= 2000 && yieldData.estimatedYield <= 3000 && yieldData.yieldVariability >= 10) {
+        } else if (estimatedYield >= 2000 && estimatedYield <= 3000 && yieldVariability >= 10) {
             calculatedStatus = 'Moderate';
             calculatedRecommendation = 'Consider improving irrigation and monitoring weather conditions.';
         } else {
@@ -146,35 +201,48 @@ function EditResult() {
             calculatedRecommendation = 'Review agricultural practices, consider new irrigation methods, and prepare for weather variability.';
         }
 
-        // Combine all data to pass to the results page
-        const resultData = {
-            ...yieldData,
-            status: calculatedStatus,
-            recommendation: calculatedRecommendation
-        };
-
         try {
-            await axios.put('http://localhost:5001/prediction/api/predictions/' + id, yieldData, {
+            const response = await axios.put(`http://localhost:5001/prediction/api/predictions/${id}`, yieldData, {
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
 
-            setResultData(resultData);
-            console.log('Result Data:', resultData);
+            // Update result data with the response
+            const updatedResultData = {
+                ...response.data.data,
+                status: calculatedStatus,
+                recommendation: calculatedRecommendation
+            };
+
+            setResultData(updatedResultData);
+            alert('Prediction updated successfully!');
 
         } catch (error) {
             console.error('Error during form submission:', error);
-            alert('Failed to submit prediction');
+            
+            // Security: Handle auth errors
+            if (error.response?.status === 401 || error.response?.status === 403) {
+                navigate('/login', { replace: true });
+                return;
+            }
+            
+            alert('Failed to update prediction. Please try again.');
         }
     };
 
     const handleOkClick = () => {
-        if (resultData) {
-            console.log('Navigating with result data:', resultData);
-            navigate('/predictionResult', { state: resultData });
-        }
+        navigate('/predictionResult');
     };
+
+    if (loading) {
+        return <div className="loading">Loading prediction data...</div>;
+    }
+
+    if (error) {
+        return <div className="error-message">{error}</div>;
+    }
 
     return (
         <div>
